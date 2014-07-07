@@ -76,28 +76,8 @@ return array(
 		),
 
         //коннект к БД-Астерикса для выборки данных по крону и формирования справочнков
-        'db1'=>array(
-            'connectionString' => 'mysql:host=80.84.116.238;dbname=asterisk',
-            'class'=>'system.db.CDbConnection',
-            'emulatePrepare' => true,
-            'username' => 'freepbxu',
-            'password' => 'xahDi4no',
-            'charset' => 'utf8',
-            //'tablePrefix' => 'tbl_',
-            //'schemaCachingDuration'=>36000,
-        ),
 
         //коннект к БД-Астерикса для выборки данных по крону и формирования справочнков
-        'db2'=>array(
-            'connectionString' => 'mysql:host=80.84.116.238;dbname=asteriskcdrdb',
-            'class'=>'system.db.CDbConnection',
-            'emulatePrepare' => true,
-            'username' => 'freepbxu',
-            'password' => 'xahDi4no',
-            'charset' => 'utf8',
-            //'tablePrefix' => 'tbl_',
-            //'schemaCachingDuration'=>36000,
-        ),
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
