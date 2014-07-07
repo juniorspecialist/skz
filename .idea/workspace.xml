@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aaee5587-0727-40b2-9b3a-1177b3a3236d" name="Default" comment="Initial commit&#10;убраны дубли звонков, определение города по ДИДу исправлено, чаще стало определятся офис звонка, выборка звонков за интервал времени">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/CallPhone.php" afterPath="$PROJECT_DIR$/protected/components/CallPhone.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/City.php" afterPath="$PROJECT_DIR$/protected/models/City.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/Report.php" afterPath="$PROJECT_DIR$/protected/models/Report.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/config/main.php" afterPath="$PROJECT_DIR$/protected/config/main.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="skz.iws" />
@@ -56,7 +51,7 @@
       <file leaf-file-name="CallPhone.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/protected/components/CallPhone.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="148" column="20" selection-start="5294" selection-end="5294" vertical-scroll-proportion="1.1950395" vertical-offset="695" max-vertical-offset="4350">
+            <state line="148" column="20" selection-start="5294" selection-end="5294" vertical-scroll-proportion="1.8596492" vertical-offset="695" max-vertical-offset="4350">
               <folding>
                 <element signature="e#3839#3900#0" expanded="false" />
                 <element signature="n#getDateFromDateTime#0;n#CallPhone#0;n#!!top" expanded="false" />
@@ -382,13 +377,19 @@
       <created>1401695134495</created>
       <updated>1401695134495</updated>
     </task>
+    <task id="LOCAL-00001" summary="Initial commit&#10;убраны дубли звонков, определение города по ДИДу исправлено, чаще стало определятся офис звонка, выборка звонков за интервал времени">
+      <created>1404741050416</created>
+      <updated>1404741050416</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32917964" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -789,7 +790,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/protected/components/CallPhone.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="20" selection-start="5294" selection-end="5294" vertical-scroll-proportion="1.1950395" vertical-offset="695" max-vertical-offset="4350">
+        <state line="148" column="20" selection-start="5294" selection-end="5294" vertical-scroll-proportion="1.8596492" vertical-offset="695" max-vertical-offset="4350">
           <folding>
             <element signature="e#3839#3900#0" expanded="false" />
             <element signature="n#getDateFromDateTime#0;n#CallPhone#0;n#!!top" expanded="false" />

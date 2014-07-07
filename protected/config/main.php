@@ -11,7 +11,7 @@ return array(
 
 	// preloading 'log' component
 	'preload'=>array('log'),
-    //'defaultController' => 'user/login',
+    'defaultController' => 'site/index',
 
     // язык поумолчанию
     'sourceLanguage' => 'en_US',
@@ -58,11 +58,6 @@ return array(
             'showScriptName'=>false,
 		),
 
-            /*
-		'db'=>array(
-			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),*/
-		// uncomment the following to use a MySQL database
 
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=skz',
@@ -72,7 +67,6 @@ return array(
 			'password' => 'root',
 			'charset' => 'utf8',
             'tablePrefix' => 'tbl_',
-            //'schemaCachingDuration'=>36000,
 		),
 
         //коннект к БД-Астерикса для выборки данных по крону и формирования справочнков
@@ -83,8 +77,6 @@ return array(
             'username' => 'freepbxu',
             'password' => 'xahDi4no',
             'charset' => 'utf8',
-            //'tablePrefix' => 'tbl_',
-            //'schemaCachingDuration'=>36000,
         ),
 
         //коннект к БД-Астерикса для выборки данных по крону и формирования справочнков
@@ -95,8 +87,6 @@ return array(
             'username' => 'freepbxu',
             'password' => 'xahDi4no',
             'charset' => 'utf8',
-            //'tablePrefix' => 'tbl_',
-            //'schemaCachingDuration'=>36000,
         ),
 
 		'errorHandler'=>array(
