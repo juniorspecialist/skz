@@ -258,10 +258,16 @@ class Report extends CActiveRecord
     /*
      * получаем список идентификаторов каналов для звонков
      * почему именно каналов а не идентификаторов звонк ? - по той таблице где мы делаем первоначальную выборку нет идентификаторов звонков
+     * $intervalMinuts - за какой промежуток времени делаем выборку данных, в минутах
      */
-    static function getListId(){
+    static function getListId($intervalMinuts = ''){
 
-        $sql = 'SELECT linkedid FROM tbl_report';
+        //если указан интервал выборки делаем выборку за интервал времени
+        if(!empty($intervalMinuts)){
+            $sql = 'SELECT linkedid FROM tbl_report';
+        }else{
+            $sql = 'SELECT linkedid FROM tbl_report';
+        }
 
         $rows = YiiBase::app()->db->createCommand($sql)->queryAll();
 

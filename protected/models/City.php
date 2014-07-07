@@ -113,22 +113,27 @@ class City extends CActiveRecord
 
             if(!empty($phone)){
                 //код города может состоять из 3,4,5,6 цифр
-                $code1 = substr($phone,1,4);
-                $code2 = substr($phone,1,5);
+                $code1 = substr($phone,1,3);
+                $code2 = substr($phone,1,4);
                 $code3 = substr($phone,1,5);
-                $code4 = substr($phone,1,3);
+                $code4 = substr($phone,1,6);
 
                 //зависимости от КЕШа
                 $dependency = new CDbCacheDependency('SELECT MAX(id) FROM {{city}}');
 
                 //запрос поиска города по совпадению по коду
-                $sql = 'SELECT city FROM {{city}} WHERE code LIKE  "%'.$code1.'%" OR code LIKE "%'.$code2.'%"  OR code LIKE "%'.$code3.'%" OR code LIKE "%'.$code4.'%"';
+                $sql = 'SELECT city FROM {{city}} WHERE code=:code1 OR code=:code2  OR code=:code3 OR code=:code4 ORDER BY code ASC';
 
                 //echo 'sql='.$sql.'<br>';
 
-                $data = YiiBase::app()->db->cache(10000, $dependency)->createCommand($sql)->queryRow();
+                $query = YiiBase::app()->db->cache(10000, $dependency)->createCommand($sql);
 
-                //echo $data['id'];
+                $query->bindValue(':code1', $code1, PDO::PARAM_INT);
+                $query->bindValue(':code2', $code2, PDO::PARAM_INT);
+                $query->bindValue(':code3', $code3, PDO::PARAM_INT);
+                $query->bindValue(':code4', $code4, PDO::PARAM_INT);
+
+                $data = $query->queryRow();
 
                 return $data['city'];
             }else{

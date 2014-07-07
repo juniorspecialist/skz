@@ -13,59 +13,83 @@ class CallPhone{
     //константы статусов событий звонка
     //const EVENT_
 
+
+    public $intervalMinuts = 60;//за какой интервал времени делать выборку по звонкам, за последние N-минут
+
+    /*
+     * проверим наличие звонка в системе по идентифитору звонка
+     */
+    public function issetCall($linkDid){
+
+        $sql = 'SELECT id FROM  tbl_report WHERE linkedid=:linkedid';
+
+        $query = YiiBase::app()->db->createCommand($sql);
+
+        $query->bindValue(':linkedid', $linkDid, PDO::PARAM_STR);
+
+        $row = $query->queryRow();
+
+        if(!empty($row)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
     /*
      * копируем данные из БД Астерикса по звонкам
      */
     public function run(){
 
-        //получаем список "linkedid" уже умеющихся звонок
-        $rowsFilter = Report::getListId();
+        //получаем список УНИКАЛЬНЫХ идентификаторов звонков за некий интервал, а далее по этим "linkedid" делаем выборки данных
+        $linkedid_list = $this->getUniqueLinkDidList();
 
-        /*
-         * в таблице "cdr" пол "uniqueid"= полю "linkedid" из таблицы "cel" и поэтому получаем список звонков по таблице БЕЗ событий и потом просматриваем события детально
-         */
-        $select = 'calldate,did,duration,cnum,cnam,recordingfile,uniqueid,dst, disposition, src';
+        //есть звонки для выборки
+        if(!empty($linkedid_list)){
+            // перебираем список Идентифиторов звонков и собираем инфу и добавим, если данного звонка не было в системе
+            foreach($linkedid_list as $link_did){
 
-        if(!empty($rowsFilter)){
-            $filtersCall_id = CHtml::listData($rowsFilter, 'linkedid', 'linkedid');
-            //выбираем список уже существуюших записей и отфильтровываем их при выборке
-            $sql = 'SELECT '.$select.' FROM cdr WHERE uniqueid NOT IN ('.implode(',',$filtersCall_id).')';
-        }else{
-            //нет данных для фильтрации всё выбираем из БД
-            $sql = 'SELECT '.$select.' FROM cdr ORDER BY calldate DESC LIMIT 200 ';// WHERE    1403507779.325023 WHERE      calldate<"2014-06-30 15:00:00"  AND WHERE uniqueid="1404125205.68055"WHERE calldate>2
-        }
+                //если уже есть инфа по данному взонку пропускаем дальнейший анализ данных
+                if($this->issetCall($link_did['linkedid'])){ continue;}
 
-        $rows = YiiBase::app()->db2->createCommand($sql)->queryAll();
+                //ищем общую информацию о звонке
+                /*
+                 * в таблице "cdr" пол "uniqueid"= полю "linkedid" из таблицы "cel" и поэтому получаем список звонков по таблице БЕЗ событий и потом просматриваем события детально
+                 */
+                $sql = 'SELECT calldate,did,duration,cnum,cnam,recordingfile,uniqueid,dst, disposition, src FROM cdr WHERE uniqueid=:uniqueid';
 
-        if(!empty($rows)){
-            foreach($rows as $row){
+                $query = YiiBase::app()->db2->createCommand($sql);
 
-                $model = new Report();
+                $query->bindValue(':uniqueid', $link_did['linkedid'], PDO::PARAM_STR);
 
-                //уникальный ID звонка это поле "linkedid" в таблице событий(cdr),т.е. может быть несколько "uniqueid" подвязанных к одному звонку(linkedid)
-                $model->uniqueid = $row['uniqueid'];
-                $model->linkedid = $this->getUniqueIdCall($row['uniqueid']);
-                $model->date_call  = self::getDateFromDateTime($row['calldate']);//'дата звонка в формате год месяц число',
-                $model->time_start_call  = self::getTimeFromDateTime($row['calldate']);//Время начала разговора
-                $model->rec_call  = $row['recordingfile'];//'Запись звонка',
-                $model->duration_call  = $row['duration'];//'Продолжительность звонка',
+                $row = $query->queryRow();
 
-                $model->destination_call = $row['dst'];//'Destination звонка',
-
-                //отлавливаем и просчитываем события и пишим их в модель
-                $model = $this->callPhoneEvents($model);
-
-                $model->call_city  = City::getCityByPhone($model->caller_id);//'Город звонка',
-
-                if($model->validate()){
-                    //echo 'ok';
-                    $model->save();
-                }else{
-                    echo '<pre>'; print_r($model->errors);
-                    echo '<pre>'; print_r($model->attributes);
+                if(!empty($row)){
+                    $model = new Report();
+                    //уникальный ID звонка это поле "linkedid" в таблице событий(cdr),т.е. может быть несколько "uniqueid" подвязанных к одному звонку(linkedid)
+                    $model->uniqueid = $row['uniqueid'];
+                    $model->linkedid = $this->getUniqueIdCall($row['uniqueid']);
+                    $model->date_call  = self::getDateFromDateTime($row['calldate']);//'дата звонка в формате год месяц число',
+                    $model->time_start_call  = self::getTimeFromDateTime($row['calldate']);//Время начала разговора
+                    $model->rec_call  = $row['recordingfile'];//'Запись звонка',
+                    $model->duration_call  = $row['duration'];//'Продолжительность звонка',
+                    $model->destination_call = $row['dst'];//'Destination звонка',
+                    //отлавливаем и просчитываем события и пишим их в модель
+                    $model = $this->callPhoneEvents($model);
+                    $model->call_city  = City::getCityByPhone($model->did);//'Город звонка',
+                    //'Офис звонка',
+                    if(empty($model->office_call_id)){
+                        $find_office = OfficeManager::getIdByCode($model->destination_call);
+                        if(!empty($find_office)){$model->office_call_id = $find_office;}
+                    }
+                    if($model->validate()){
+                        $model->save();
+                    }else{
+                        echo '<pre>'; print_r($model->errors);
+                        echo '<pre>'; print_r($model->attributes);
+                    }
                 }
-
-                //die();
             }
         }
     }
@@ -115,6 +139,25 @@ class CallPhone{
         $row = $query->queryRow();
 
         return $row['linkedid'];
+    }
+
+    /*
+     * делаем выборку Уникальных идентификаторов звонков за интервал времени
+     * интервал времени - $this->intervalMinuts
+     * выборка нужна, чтобы не выбирать посторяющие данные по звонкам из таблицы "cdr"
+     */
+    public function getUniqueLinkDidList(){
+
+        $sql = 'SELECT DISTINCT (linkedid)
+                FROM cel
+                WHERE `eventtime` > SUBDATE(CURRENT_TIMESTAMP , INTERVAL :minute MINUTE)
+                ORDER BY eventtime DESC';
+
+        $query = YiiBase::app()->db2->createCommand($sql);
+
+        $query->bindValue(':minute', $this->intervalMinuts, PDO::PARAM_INT);
+
+        return $query->queryAll();
     }
 
     /*
@@ -195,7 +238,11 @@ class CallPhone{
 
                 //определяем ОФИС для ответа оп звонку
                 if(strlen($event['exten'])>2 && strlen($event['exten'])<6 && empty($model->office_call_id)){//если длина строки подходит - ищием воспадение по коду-строке
-                    $model->office_call_id = Manager::getIdByCode($event['exten']);//'Офис звонка',
+                    //$model->office_call_id = Manager::getIdByCode($event['exten']);//'Офис звонка',
+                    $find_office_id = OfficeManager::getIdByCode($event['exten']);//'Офис звонка',
+                    if(!empty($find_office_id)){
+                        $model->office_call_id = $find_office_id;
+                    }
                 }
 
                 //определим менеджера по звонку
