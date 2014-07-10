@@ -5,11 +5,14 @@
  * Date: 24.06.14
  * Time: 11:22
  */
+
+echo  "<strong>Список примененных фильтров:".$model->AcceptList.'</strong>';
+
 $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'report-grid',
     'dataProvider'=>$dataProvider,
     'filter'=>$model,
-    'template'=>'{pager}{items}{pager}',
+    //'template'=>'{items}{pager}',
     'ajaxUpdate'=>false,
     //'enableSorting'=>true,
     'columns'=>array(
@@ -47,24 +50,28 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type'=>'raw',
             'name'=>'date_call',
             'value'=>'$data->date_call',
+            'filter'=>$this->widget('application.components.DateCallFilter', array(), true)
         ),
         array(
             'header'=>'Время начала разговора',
             'type'=>'raw',
             'name'=>'time_start_call',
             'value'=>'$data->time_start_call',
+            'filter'=>$this->widget('application.components.TimeStartCallFilter', array(), true)
         ),
         array(
             'header'=>'Время конца разговора',
             'type'=>'raw',
             'name'=>'time_end_call',
             'value'=>'$data->time_end_call',
+            'filter'=>$this->widget('application.components.TimeEndCallFilter', array(), true)
         ),
         array(
             'header'=>'Продолжительность звонка',
             'type'=>'raw',
             'name'=>'duration_call',
-            'value'=>'$data->duration_call',
+            'value'=>'$data->duration_call',  //
+            'filter'=>$this->widget('application.components.DurationCallFilter', array(), true)
         ),
         array(
             'header'=>'Destination звонка',
@@ -74,13 +81,21 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter'=>$this->widget('application.components.DestFilter', array(), true)
         ),
         array(
-            'header'=>'Офис звонка',
+            'header'=>'Офис',
             'type'=>'raw',
             'name'=>'office_call_id',
             'value'=>'$data->callOffice',
             //'value'=>'$data->officeсall->title',
             //'value'=>'($data->office_call_id!==0)?$data->officeсall->title:""',
-            'filter'=>CHtml::activeDropDownList($model, 'office_call_id', CHtml::listData(OfficeManager::model()->findAll(), 'id', 'title'), array('empty'=>'Все')),
+            'filter'=>CHtml::activeDropDownList($model, 'office_call_id', OfficeManager::getListOffice(), array('empty'=>'Все')),
+        ),
+        array(
+            'header'=>'Сайт',
+            'type'=>'raw',
+            'value'=>'$data->site',
+            'name'=>'site_id',
+            'filter'=>CHtml::activeDropDownList($model, 'site_id', CHtml::listData(Site::getSitesList(), 'id', 'site') , array('empty'=>'Все')),
+               //echo CHtml::dropDownList('categories', $category,$list,array('empty' => '(Select a category'))),
         ),
         array(
             'header'=>'Направление звонка',
@@ -113,12 +128,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type'=>'raw',
             'name'=>'waiting_time',
             'value'=>'$data->waiting_time',
+            'filter'=>$this->widget('application.components.TimeWaitFilter', array(), true)
         ),
         array(
             'header'=>'Кол-во переадресаций',
             'type'=>'raw',
             'name'=>'count_redirect',
             'value'=>'$data->count_redirect',
+            'filter'=>$this->widget('application.components.CountRedirectFilter', array(), true)
         ),
         array(
             'header'=>'Цепочка пройденных переадресаций',
@@ -131,8 +148,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'header'=>'Запись звонка',
             'type'=>'raw',
             //'value'=>'$data->rec_call',
-            'value'=>'Chtml::link("Скачать", "#")',
+            'value'=>'$data->LinkDownloadRec',
         ),
+            /*
         array(
             'header'=>'Источник звонка',
             'type'=>'raw',
@@ -144,10 +162,13 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type'=>'raw',
             'name'=>'search_word',
             'value'=>'$data->search_word',
-        ),
+        ),*/
         array(
             'class'=>'CButtonColumn',
             'visible'=>false,
         ),
     ),
 ));
+
+Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/jquery-ui-timepicker-addon.js',CClientScript::POS_END);
+Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/jquery-ui-timepicker-addon.css');

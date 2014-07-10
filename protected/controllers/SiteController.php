@@ -3,219 +3,180 @@
 class SiteController extends Controller
 {
 	/**
-	 * Declares class-based actions.
+	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
+	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public function actions()
+	public $layout='//layouts/column1';
+
+	/**
+	 * @return array action filters
+	 */
+	public function filters()
 	{
 		return array(
-			// captcha action renders the CAPTCHA image displayed on the contact page
-			'captcha'=>array(
-				'class'=>'CCaptchaAction',
-				'backColor'=>0xFFFFFF,
+			'accessControl', // perform access control for CRUD operations
+			'postOnly + delete', // we only allow deletion via POST request
+		);
+	}
+
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array(
+			array('allow',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('index','view'),
+				//'users'=>array('*'),
 			),
-			// page action renders "static" pages stored under 'protected/views/site/pages'
-			// They can be accessed via: index.php?r=site/page&view=FileName
-			'page'=>array(
-				'class'=>'CViewAction',
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('create','update'),
+				//'users'=>array('@'),
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('admin','delete'),
+				//'users'=>array('admin'),
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
 			),
 		);
 	}
 
 	/**
-	 * This is the default 'index' action that is invoked
-	 * when an action is not explicitly requested by users.
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$this->render('view',array(
+			'model'=>$this->loadModel($id),
+		));
+	}
+
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionCreate()
+	{
+		$model=new Site;
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['Site']))
+		{
+			$model->attributes=$_POST['Site'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->id));
+		}
+
+		$this->render('create',array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionUpdate($id)
+	{
+		$model=$this->loadModel($id);
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['Site']))
+		{
+			$model->attributes=$_POST['Site'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->id));
+		}
+
+		$this->render('update',array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionDelete($id)
+	{
+		$this->loadModel($id)->delete();
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+
+	/**
+	 * Lists all models.
 	 */
 	public function actionIndex()
 	{
-        $model=new Report('search');
+        /*
+		$dataProvider=new CActiveDataProvider('Site');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));*/
+        $model=new Site('search');
         $model->unsetAttributes();  // clear any default values
-        if(isset($_GET['Report']))
-            $model->attributes=$_GET['Report'];
+        if(isset($_GET['Site']))
+            $model->attributes=$_GET['Site'];
 
-        $criteria=new CDbCriteria;
-
-        if ($model->call_diraction){
-            $criteria->compare('call_diraction', $model->call_diraction);
-        }
-        //фильтр по менеджеру
-        if($model->manager_call_id){
-            $criteria->compare('manager_call_id', $model->manager_call_id);
-        }
-
-        //статус обработки Звонка
-        if($model->status_call){
-            $criteria->compare('status_call', $model->status_call);
-        }
-
-        //фильтруем по офису
-        if($model->office_call_id){
-            $criteria->compare('office_call_id', $model->office_call_id);
-        }
-
-        //==========фильтрация по регулярному выражению или отрацание по регулярке============================
-
-        //проверим и примениним - ФИЛЬТРАЦИЮ по идентификатор звонка(РЕГУЛЯРКА)
-        if(isset($_GET['radio_selected_uniqueid']) && isset($_GET['search_word_accept_reg_uniqueid'])){
-            if(!empty($_GET['radio_selected_uniqueid']) && !empty($_GET['search_word_accept_reg_uniqueid'])){
-                //2 типа удовлетворяет регулярке или нет по регулярке
-                if($_GET['radio_selected_uniqueid']=='search_word_accept_uniqueid'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("uniqueid REGEXP '".$_GET['search_word_accept_reg_uniqueid']."'");
-                }else{
-                    //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("uniqueid NOT REGEXP '".$_GET['search_word_accept_reg_uniqueid']."'");
-                }
-            }
-        }
-
-        //проверим и примениним - ФИЛЬТРАЦИЮ по Номер клиента(РЕГУЛЯРКА)
-        if(isset($_GET['radio_selected_CallerId']) && isset($_GET['search_word_accept_reg_CallerId'])){
-            if(!empty($_GET['radio_selected_CallerId']) && !empty($_GET['search_word_accept_reg_CallerId'])){
-                //2 типа удовлетворяет регулярке или нет по регулярке
-                if($_GET['radio_selected_CallerId']=='search_word_accept_CallerId'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("caller_id REGEXP '".$_GET['search_word_accept_reg_CallerId']."'");
-                }else{
-                    //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("caller_id NOT REGEXP '".$_GET['search_word_accept_reg_CallerId']."'");
-                }
-            }
-        }
-        //проверим и примениним - ФИЛЬТРАЦИЮ по DID(РЕГУЛЯРКА)
-        if(isset($_GET['radio_selected_Did']) && isset($_GET['search_word_accept_reg_Did'])){
-            if(!empty($_GET['radio_selected_Did']) && !empty($_GET['search_word_accept_reg_Did'])){
-                //2 типа удовлетворяет регулярке или нет по регулярке
-                if($_GET['radio_selected_Did']=='search_word_accept_Did'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("did REGEXP '".$_GET['search_word_accept_reg_Did']."'");
-                }else{
-                    //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("did NOT REGEXP '".$_GET['search_word_accept_reg_Did']."'");
-                }
-            }
-        }
-        //проверим и примениним - ФИЛЬТРАЦИЮ по call_city(РЕГУЛЯРКА)
-        if(isset($_GET['radio_selected_call_city']) && isset($_GET['search_word_accept_reg_call_city'])){
-            if(!empty($_GET['radio_selected_call_city']) && !empty($_GET['search_word_accept_reg_call_city'])){
-                //2 типа удовлетворяет регулярке или нет по регулярке
-                if($_GET['radio_selected_call_city']=='search_word_accept_call_city'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition(" call_city REGEXP '".$_GET['search_word_accept_reg_call_city']."'");
-                }else{
-                    //не удовлетворяет регулярному выражению
-                    $criteria->addCondition(" call_city NOT REGEXP '".$_GET['search_word_accept_reg_call_city']."'");
-                }
-            }
-        }
-        //проверим и примениним - ФИЛЬТРАЦИЮ по Destination(РЕГУЛЯРКА)
-        if(isset($_GET['radio_selected_dest']) && isset($_GET['search_word_accept_reg_dest'])){
-            if(!empty($_GET['radio_selected_dest']) && !empty($_GET['search_word_accept_reg_dest'])){
-                //2 типа удовлетворяет регулярке или нет по регулярке
-                if($_GET['radio_selected_dest']=='search_word_accept_dest'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("destination_call REGEXP '".$_GET['search_word_accept_reg_dest']."'");
-                }else{
-                    //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("destination_call NOT REGEXP '".$_GET['search_word_accept_reg_dest']."'");
-                }
-            }
-        }
-        //проверим и примениним - ФИЛЬТРАЦИЮ по Цепочка пройденных переадресаций(РЕГУЛЯРКА)
-        if(isset($_GET['radio_selected_redirect']) && isset($_GET['search_word_accept_reg_redirect'])){
-            if(!empty($_GET['radio_selected_redirect']) && !empty($_GET['search_word_accept_reg_redirect'])){
-                //2 типа удовлетворяет регулярке или нет по регулярке
-                if($_GET['radio_selected_redirect']=='search_word_accept_redirect'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("chain_passed_redirects REGEXP '".$_GET['search_word_accept_reg_redirect']."'");
-                }else{
-                    //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("chain_passed_redirects NOT REGEXP '".$_GET['search_word_accept_reg_redirect']."'");
-                }
-            }
-        }
-
-
-
-        $dataProvider = new CActiveDataProvider('Report', array(
-            'criteria'=>$criteria,
-            'pagination'=>array(
-                'pageSize'=>50,
-            ),
-            //'sort' => array('attributes' => array('uniqueid', 'caller_id', 'val')),
-        ));
-
-        $this->render('report',array(
+        $this->render('admin',array(
             'model'=>$model,
-            'dataProvider'=>$dataProvider,
         ));
 	}
 
 	/**
-	 * This is the action to handle external exceptions.
+	 * Manages all models.
 	 */
-	public function actionError()
+	public function actionAdmin()
 	{
-		if($error=Yii::app()->errorHandler->error)
-		{
-			if(Yii::app()->request->isAjaxRequest)
-				echo $error['message'];
-			else
-				$this->render('error', $error);
-		}
+		$model=new Site('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Site']))
+			$model->attributes=$_GET['Site'];
+
+		$this->render('admin',array(
+			'model'=>$model,
+		));
 	}
 
 	/**
-	 * Displays the contact page
+	 * Returns the data model based on the primary key given in the GET variable.
+	 * If the data model is not found, an HTTP exception will be raised.
+	 * @param integer $id the ID of the model to be loaded
+	 * @return Site the loaded model
+	 * @throws CHttpException
 	 */
-	public function actionContact()
+	public function loadModel($id)
 	{
-		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
-			$model->attributes=$_POST['ContactForm'];
-			if($model->validate())
-			{
-				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
-				$subject='=?UTF-8?B?'.base64_encode($model->subject).'?=';
-				$headers="From: $name <{$model->email}>\r\n".
-					"Reply-To: {$model->email}\r\n".
-					"MIME-Version: 1.0\r\n".
-					"Content-Type: text/plain; charset=UTF-8";
-
-				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
-				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
-				$this->refresh();
-			}
-		}
-		$this->render('contact',array('model'=>$model));
+		$model=Site::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
 	}
 
 	/**
-	 * Displays the login page
+	 * Performs the AJAX validation.
+	 * @param Site $model the model to be validated
 	 */
-	public function actionLogin()
+	protected function performAjaxValidation($model)
 	{
-		$model=new LoginForm;
-
-		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='site-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-
-		// collect user input data
-		if(isset($_POST['LoginForm']))
-		{
-			$model->attributes=$_POST['LoginForm'];
-			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
-				$this->redirect(Yii::app()->user->returnUrl);
-		}
-		// display the login form
-		$this->render('login',array('model'=>$model));
-	}
-
-	/**
-	 * Logs out the current user and redirect to homepage.
-	 */
-	public function actionLogout()
-	{
-		Yii::app()->user->logout();
-		$this->redirect(Yii::app()->homeUrl);
 	}
 }

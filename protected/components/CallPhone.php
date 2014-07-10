@@ -14,7 +14,7 @@ class CallPhone{
     //const EVENT_
 
 
-    public $intervalMinuts = 60;//за какой интервал времени делать выборку по звонкам, за последние N-минут
+    public $intervalMinuts = 360;//за какой интервал времени делать выборку по звонкам, за последние N-минут
 
     /*
      * проверим наличие звонка в системе по идентифитору звонка
@@ -33,6 +33,36 @@ class CallPhone{
             return true;
         }else{
             return false;
+        }
+    }
+
+    /*
+     * получаем списоке событий по Linkdid-звонку
+     * проверяем звонок нужно ли нам его выводить в список(таблицу), если он внутренний(один менеджер позвонил другому, то не выводим его)
+     */
+    public function checkCall($linkdid){
+        //собираем события по Уникальному идентификатору звонка,собираем необходимые данные по столбцам
+        $sql = 'SELECT * FROM cel WHERE linkedid=:linkedid';// OR uniqueid=:uniqueid
+
+        $query = YiiBase::app()->db2->createCommand($sql);
+
+        $query->bindValue(':linkedid', $linkdid);
+
+        $events = $query->queryAll();
+
+        $accept_event = false;
+
+        foreach($events as $index=>$event){
+            if(strlen($event['cid_num'])>6 || strlen($event['cid_dnid'])>6){
+                $accept_event = true; break;
+            }
+        }
+
+        //если нам подходит linkdid то мы возращаем массив на обработку, если не подходит - пустое значение возращаем
+        if($accept_event){
+            return $events;
+        }else{
+            return '';
         }
     }
 
@@ -66,6 +96,13 @@ class CallPhone{
                 $row = $query->queryRow();
 
                 if(!empty($row)){
+
+                    //проверим отфильтровываем ли мы этот ЛИНК_ДИД или нет
+                    $events = $this->checkCall($link_did['linkedid']);
+
+                    //если нет инфы, звонок нам не подходит, то пропускаем его
+                    if(empty($events)){continue;}
+
                     $model = new Report();
                     //уникальный ID звонка это поле "linkedid" в таблице событий(cdr),т.е. может быть несколько "uniqueid" подвязанных к одному звонку(linkedid)
                     $model->uniqueid = $row['uniqueid'];
@@ -73,15 +110,24 @@ class CallPhone{
                     $model->date_call  = self::getDateFromDateTime($row['calldate']);//'дата звонка в формате год месяц число',
                     $model->time_start_call  = self::getTimeFromDateTime($row['calldate']);//Время начала разговора
                     $model->rec_call  = $row['recordingfile'];//'Запись звонка',
-                    $model->duration_call  = $row['duration'];//'Продолжительность звонка',
+                    //$model->duration_call  = $row['duration'];//'Продолжительность звонка',
                     $model->destination_call = $row['dst'];//'Destination звонка',
                     //отлавливаем и просчитываем события и пишим их в модель
-                    $model = $this->callPhoneEvents($model);
+                    $model = $this->callPhoneEvents($model, $events);
                     $model->call_city  = City::getCityByPhone($model->did);//'Город звонка',
+
+                    //определяем сайт для входящего звонка
+                    if(empty($model->site_id)){
+                        $site_id = PhoneRegions::getSiteByDid($model->did);
+                        if(!empty($site_id)){
+                            $model->site_id = $site_id['site_id'];
+                        }
+                    }
+
                     //'Офис звонка',
                     if(empty($model->office_call_id)){
-                        $find_office = OfficeManager::getIdByCode($model->destination_call);
-                        if(!empty($find_office)){$model->office_call_id = $find_office;}
+                        //$find_office = OfficeManager::getIdByCode($model->destination_call);
+                        //if(!empty($find_office)){$model->office_call_id = $find_office;}
                     }
                     if($model->validate()){
                         $model->save();
@@ -155,7 +201,7 @@ class CallPhone{
 
         $query = YiiBase::app()->db2->createCommand($sql);
 
-        $query->bindValue(':minute', $this->intervalMinuts, PDO::PARAM_INT);
+        $query->bindValue(':minute', intval($this->intervalMinuts+3), PDO::PARAM_INT);
 
         return $query->queryAll();
     }
@@ -165,30 +211,44 @@ class CallPhone{
      * $model - строка с первичными данными для сохранения, на основании их собираем остальные и пишим строку целиком
      * выбираем данные по Уникальному идентификатору звонка, а не очереди(linkedid)
      */
-    public function callPhoneEvents($model){
+    public function callPhoneEvents($model,$events){
 
-        //собираем события по Уникальному идентификатору звонка,собираем необходимые данные по столбцам
-        $sql = 'SELECT * FROM cel WHERE linkedid=:linkedid';// OR uniqueid=:uniqueid
-
-        $query = YiiBase::app()->db2->createCommand($sql);
-
-        $query->bindValue(':linkedid', $model->linkedid);
-        //$query->bindValue(':uniqueid', $model->linkedid);
-
-        $events = $query->queryAll();
 
         $time_connect_server = '';//начальное время получения запроса на сервере(событие звонок)
         $time_last_answer = '';//последнее событие ответа, менеджер поднял трубку и ответил на звонок, последний ФТНСВЕР это поднятие трубки
+        $time_disconnect = '';//отключение от сервере, последнее событие по звонку
 
         //массив редиректов по звонку(менеджер переключил на другого менеджера)
         $redirect_list = array();
 
-        //echo '<pre>'; print_r($events); die();
-
         $answered_call = false;//был ли отвечен звонок
+
+        $second_can_start = false;
 
         //отлавливаем нужные события и пишим их в массив
         foreach($events as $index=>$event){
+
+            //отлавливаем направление звонка, определяем по короткому коду во втором "chan_start" в списке событий по звонку
+            if($event['eventtype']=='CHAN_START' && $second_can_start && empty($model->office_call_id)){
+                //по корооткому коду определяем направление звонка, по первой цифре в номере
+                $course_call = mb_substr($event['exten'],0,1);
+                //по первой цифре определяем направление звонка
+                $model->office_call_id = $course_call;
+            }
+            //отлавливаем ВТОРОЕ открытие канала для звонка
+            if($event['eventtype']=='CHAN_START' && empty($model->office_call_id) && !$second_can_start){
+                $second_can_start = true;
+            }
+
+            if($event['eventtype']=='LINKEDID_END' && empty($time_disconnect)){
+                $time_disconnect = $event['eventtime'];
+            }
+
+            //отлавливаем цепочку переадресаций по звонку
+            if($event['eventtype']=='CHAN_START' && !empty($event['cid_num']) && strlen($event['cid_num'])<6 ){
+                $redirect_list[] = $event['cid_num'];
+            }
+
 
             //по первой строке событий определяем исходящий или входящий звонок
             if($event['eventtype']=='CHAN_START' && empty($model->call_diraction)){
@@ -218,6 +278,7 @@ class CallPhone{
                 //'Виртуальный номер на который позвонил клиент (DID)',
                 if(!empty($find_did)){
                     $model->did = $event['exten'];//нашли соответсвие по ДИД
+                    $model->phone_region_id = $find_did;
                 }
             }
             //Время конца разговора
@@ -226,24 +287,31 @@ class CallPhone{
             }
 
             //'waiting_time' =>'время от соединения с сервером до взятия трубки менеджером в секундах',
-            if($event['eventtype']=='CHAN_START'){//$time_connect_server
+            if($event['eventtype']=='CHAN_START' && empty($time_connect_server)){//$time_connect_server
                 $time_connect_server = $event['eventtime'];
             }
+
+            //подсчитаем продолжительность звонка
+            if(!empty($time_disconnect) && !empty($time_connect_server)){
+                $model->duration_call = intval(strtotime($time_disconnect)-strtotime($time_connect_server));
+            }
+
 
             if($event['eventtype']=='ANSWER'){
 
                 $answered_call = true;//ответил кто-то на звонок
 
-                $time_last_answer = $event['eventtime'];
-
                 //определяем ОФИС для ответа оп звонку
+                /*
                 if(strlen($event['exten'])>2 && strlen($event['exten'])<6 && empty($model->office_call_id)){//если длина строки подходит - ищием воспадение по коду-строке
                     //$model->office_call_id = Manager::getIdByCode($event['exten']);//'Офис звонка',
                     $find_office_id = OfficeManager::getIdByCode($event['exten']);//'Офис звонка',
+
                     if(!empty($find_office_id)){
+
                         $model->office_call_id = $find_office_id;
                     }
-                }
+                }*/
 
                 //определим менеджера по звонку
                 if(!empty($event['cid_num']) && strlen($event['cid_num'])<6 ){//1403882248.44748   && empty($model->manager_call_id)
@@ -251,7 +319,10 @@ class CallPhone{
                     $find_manager = CallPhone::getManagerByCode($event['cid_num']);
 
                     if(!empty($find_manager)){
+
                         $model->manager_call_id  = $find_manager;
+
+                        if(empty($time_last_answer)){$time_last_answer = $event['eventtime'];}
                     }
                 }
 
@@ -260,10 +331,10 @@ class CallPhone{
 
             //отлавливаем редиректы по звонкам
             if($event['eventtype']=='ATTENDEDTRANSFER'){//нашли переадресацию звонка,фиксируем цепочку переадресаций
-                $redirect_list[] = $event['cid_num'];
+                //$redirect_list[] = $event['cid_num'];
                 //откуда перенаправили звонок(с менеджера А)
                 //array_push($redirect_list, $event['cid_num']);//добавим в конец массива менеджера
-                $redirect_list[] = $event['cid_dnid'];
+                //$redirect_list[] = $event['cid_dnid'];
                 // куда перенаправили звонок (на менеджера Б)
                 //array_push($redirect_list, $event['cid_dnid']);//добавим в конец массива менеджера
             }
@@ -299,9 +370,11 @@ class CallPhone{
         $model->count_redirect = sizeof($redirect_list);
 
         //проверим статус звонка, если на него ответили - считаем дельтту если не ответили - нет смысла
-        if($model->status_call=='ANSWERED'){
+        if($model->status_call==Report::CALL_ANSWERED){
+            //echo $time_last_answer.'|'.$time_connect_server.'<br>';
             //если нашли значения старта звонка и последнего поднятия трубки менеджером, считаем дельту
             if(!empty($time_connect_server) && !empty($time_last_answer)){
+                //echo 'delta='.intval(strtotime($time_last_answer)-strtotime($time_connect_server)).'<br>';
                 $model->waiting_time = intval(strtotime($time_last_answer)-strtotime($time_connect_server));
             }else{
                 $model->waiting_time = 0;
@@ -324,5 +397,7 @@ class CallPhone{
 
         return $model;
     }
+
+
 
 }

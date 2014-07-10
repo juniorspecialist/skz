@@ -15,7 +15,7 @@ display: none;
 $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'destFilter',
     'options' => array(
-        'title' => 'Фильтрация:Город звонка',
+        'title' => 'Фильтрация:Destination звонка',
         'autoOpen' => false,
         'modal' => true,
         'resizable'=> false,

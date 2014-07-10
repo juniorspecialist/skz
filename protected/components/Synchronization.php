@@ -24,7 +24,7 @@ class Synchronization {
         $this->catalogManager();
 
         //синхроинизируем список DID-номеров
-        $this->DidNumbers();
+        //$this->DidNumbers();
     }
 
     /*

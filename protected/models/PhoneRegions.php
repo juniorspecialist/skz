@@ -26,12 +26,13 @@ class PhoneRegions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('phone, region', 'required'),
+			array('phone, region_id, site_id', 'required'),
 			array('phone', 'length', 'max'=>60),
-			array('region', 'length', 'max'=>80),
+            array('region_id, site_id', 'numerical', 'integerOnly'=>true),
+			//array('region', 'length', 'max'=>80),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, phone, region', 'safe', 'on'=>'search'),
+			array('id, phone, region_id, site_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -43,6 +44,8 @@ class PhoneRegions extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+            'region' => array(self::BELONGS_TO, 'Region', 'region_id'),
+            'site' => array(self::BELONGS_TO, 'Site', 'site_id'),
 		);
 	}
 
@@ -53,8 +56,9 @@ class PhoneRegions extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'phone' => 'телефон',
-			'region' => 'регион,название направления для звонка(сайт+город)',
+			'phone' => 'Телефон',
+			'region_id' => 'Регион,название направления для звонка',
+            'site_id'=>'Сайт',
 		);
 	}
 
@@ -78,7 +82,7 @@ class PhoneRegions extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('phone',$this->phone,true);
-		$criteria->compare('region',$this->region,true);
+		$criteria->compare('region_id',$this->region,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -115,5 +119,20 @@ class PhoneRegions extends CActiveRecord
         $sql = 'SELECT phone FROM {{phone_regions}}';
         $query = YiiBase::app()->db->createCommand($sql)->queryAll();
         return $query;
+    }
+
+    /*
+     * определяем сайт Входящего звонка по его ДИД
+     * $did - номер, на который звонит клиент
+     */
+    static function getSiteByDid($did){
+
+        $sql = 'SELECT * FROM {{phone_regions}} WHERE phone=:phone';
+
+        $query = YiiBase::app()->db->cache(1000)->createCommand($sql);
+
+        $query->bindValue(':phone', $did, PDO::PARAM_STR);
+
+        return $query->queryRow();
     }
 }

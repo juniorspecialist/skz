@@ -121,14 +121,19 @@ class Manager extends CActiveRecord
 
     static function findByCodeList($codeList){
 
+        /*echo '<pre>'; print_r($codeList);
+
+        return array();*/
+
         $rows = array();
 
-        for($i=0;$i<sizeof($codeList);$i++){
-            $row = $codeList[$i];
-            $where = 'code=:code';
-            $sql = 'SELECT * FROM {{manager}} WHERE '.$where;
+        //for($i=0;$i<sizeof($codeList);$i++){
+        foreach($codeList as $j=>$code){
+            //$row = $codeList[$i];
+            //$where = '';
+            $sql = 'SELECT * FROM {{manager}} WHERE code=:code';
             $query = YiiBase::app()->db->createCommand($sql);
-            $rows[] = $query->bindValue(':code', $row,PDO::PARAM_STR)->queryRow();
+            $rows[] = $query->bindValue(':code', $code,PDO::PARAM_STR)->queryRow();
         }
 
         return $rows;

@@ -30,12 +30,12 @@ class Site extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('site, clientApiId, idSiteInCallTouche', 'required'),
+			array('site, ', 'required'),
 			array('site', 'length', 'max'=>250),
-			array('clientApiId, idSiteInCallTouche', 'length', 'max'=>256),
+			//array('clientApiId, idSiteInCallTouche', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, site, clientApiId, idSiteInCallTouche', 'safe', 'on'=>'search'),
+			array('id, site', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -47,7 +47,7 @@ class Site extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'sitePhones' => array(self::HAS_MANY, 'SitePhone', 'site_id'),
+			//'sitePhones' => array(self::HAS_MANY, 'SitePhone', 'site_id'),
 		);
 	}
 
@@ -59,8 +59,8 @@ class Site extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'site' => 'Сайт',
-			'clientApiId' => 'Уникальный идентификатор, ключ для отправки запроса в CallTouch',
-			'idSiteInCallTouche' => 'id сайта в системе кол-тача',
+			//'clientApiId' => 'Уникальный идентификатор, ключ для отправки запроса в CallTouch',
+			//'idSiteInCallTouche' => 'id сайта в системе кол-тача',
 		);
 	}
 
@@ -84,13 +84,32 @@ class Site extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('site',$this->site,true);
-		$criteria->compare('clientApiId',$this->clientApiId,true);
-		$criteria->compare('idSiteInCallTouche',$this->idSiteInCallTouche,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+
+    /*
+     * по ID сайта находим его название
+     */
+    static function getSiteById($site_id){
+        $list = self::getSitesList();
+        foreach($list as $row){
+            if($row['id']==$site_id){
+                return $row['site'];
+            }
+        }
+    }
+
+    /*
+     * получаем список сайтов для списка - массив
+     */
+    static function getSitesList(){
+        $sql = 'SELECT * FROM {{site}}';
+        $rows = YiiBase::app()->db->cache(1000)->createCommand($sql)->queryAll();
+        return $rows;
+    }
 
 	/**
 	 * Returns the static model of the specified AR class.

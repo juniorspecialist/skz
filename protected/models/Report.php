@@ -40,6 +40,62 @@ class Report extends CActiveRecord
     const CALL_BUSY = 3;//занято
     const CALL_NO_ANSWER = 4;//нет ответа
 
+
+    //public $accept_list = array();
+
+
+    /*
+     * получаем список фильтров которые были применены для таблицы отчётов
+     * анализируем массив $_GET данных и выводим список применяемых фильтров к таблице
+     */
+    public function getAcceptList(){
+
+        $list = array();
+
+        //TODO проверить, чтобы все фильтра писались в список через запятую($_GET['Report[office_call_id]'])
+
+        foreach($_GET as $j=>$value){
+
+            //ID звонка
+            if($j=='search_word_accept_reg_uniqueid'){$list[] = 'ID звонка';}
+            //Номер клиента
+            if($j=='search_word_accept_reg_CallerId'){$list[] = 'Номер клиента';}
+            //
+            if($j=='search_word_accept_reg_Did'){$list[] = 'DID';}
+            //
+            if($j=='search_word_accept_reg_call_city'){$list[] = 'Город звонка';}
+            //
+            if($j=='DateCall_to' || $j=='DateCall_from'){$list[] = 'Дата звонка';}
+            //
+            if($j=='TimeStartCall_from' || $j=='TimeStartCall_to'){$list[] = 'Время начала разговора';}
+            //
+            if($j=='TimeEndCall_from' || $j=='TimeEndCall_to'){$list[] = 'Время конца разговора';}
+            //
+            if($j=='DurationCallCall_from' || $j=='DurationCallCall_to'){$list[] = 'Продолжительность звонка';}
+            //
+            if($j=='search_word_accept_reg_dest'){$list[] = 'Destination звонка';}
+            //
+
+            //
+            if(!empty($_GET['Report[site_id]'])){$list[] = 'Сайт';}
+            //
+            if($j=='Report[call_diraction]'){$list[] = 'Направление звонка';}
+            //
+            if($j=='Report[status_call]'){$list[] = 'Статус обработки звонка';}
+            //
+            if($j=='Report[manager_call_id]'){$list[] = 'Менеджер звонка';}
+            //
+            if($j=='TimeWait_from' || $j=='TimeWait_to'){$list[] = 'Время ожидания клиента';}
+            //
+            if($j=='CountRedirect_from' || $j=='CountRedirect_to'){$list[] = 'Кол-во переадресаций';}
+            if($j=='search_word_accept_reg_redirect'){$list[] = 'Цепочка пройденных переадресаций';}
+        }
+
+        $list = array_unique($list);
+
+        return implode(',' , $list);
+    }
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -95,14 +151,14 @@ class Report extends CActiveRecord
             //проверим заполнение менеджера по звонку, если статус у звонка отвечен
             array('manager_call_id', 'check_manager'),
 
-			array('duration_call,  call_diraction, status_call, manager_call_id, waiting_time, count_redirect', 'numerical', 'integerOnly'=>true),
+			array('duration_call,  call_diraction, status_call, manager_call_id, waiting_time, count_redirect, phone_region_id, site_id', 'numerical', 'integerOnly'=>true),
 			array('uniqueid, linkedid, caller_id, destination_call, call_city, office_call_id', 'length', 'max'=>60),
 			array('did', 'length', 'max'=>40),
 			array('chain_passed_redirects, rec_call, search_word', 'length', 'max'=>256),
 			array('source', 'length', 'max'=>250),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, call_id, caller_id, did, call_city, date_call, time_start_call, time_end_call, duration_call, destination_call, office_call_id, call_diraction, status_call, manager_call_id, waiting_time, count_redirect, chain_passed_redirects, rec_call, source, search_word', 'safe', 'on'=>'search'),
+			array('id, call_id, caller_id, did, call_city, date_call, time_start_call, time_end_call, duration_call, destination_call, office_call_id, call_diraction, status_call, manager_call_id, waiting_time, count_redirect, chain_passed_redirects, rec_call, phone_region_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -143,14 +199,31 @@ class Report extends CActiveRecord
 			'officeсall' => array(self::BELONGS_TO, 'OfficeManager', 'office_call_id'),
 			'managerCall' => array(self::BELONGS_TO, 'Manager', 'manager_call_id'),
             'callcity' => array(self::BELONGS_TO, 'City', 'call_city'),
+            //'site' => array(self::BELONGS_TO, 'Site', 'site_id'),
 		);
 	}
+
+    /*
+     * Получаем название сайта по его ID
+     */
+    public function getSite(){
+        if($this->site_id==0){
+            return '';
+        }else{
+            return Site::getSiteById($this->site_id);
+        }
+    }
 
     /*
      * для таблицы отчётов получаем название офиса по строке, если там значение!=0
      */
     public function getCallOffice(){
-        if(!empty($this->office_call_id)){
+        if($this->office_call_id!=0){
+            return OfficeManager::getListOffice($this->office_call_id);
+        }else{
+            return '';
+        }
+        /*if(!empty($this->office_call_id)){
             if($this->office_call_id!=0){
                 return OfficeManager::getOfficeById($this->office_call_id);
             }else{
@@ -158,8 +231,15 @@ class Report extends CActiveRecord
             }
         }else{
             return '';
-        }
+        }*/
     }
+
+    /*
+    public function getSite(){
+        if($this->site_id!=0){
+            return $this->
+        }
+    }*/
 
     /*
     public function getCallCity(){
@@ -187,7 +267,7 @@ class Report extends CActiveRecord
 			'time_end_call' => 'Время конца разговора',
 			'duration_call' => 'Продолжительность звонка',
 			'destination_call' => 'Destination звонка',
-			'office_call_id' => 'Офис звонка',
+			'office_call_id' => 'Офис',
 			'call_diraction' => 'Направление звонка',
 			'status_call' => 'Статус обработки звонка',
 			'manager_call_id' => 'Менеджер звонка',
@@ -197,6 +277,7 @@ class Report extends CActiveRecord
 			'rec_call' => 'Запись звонка',
 			'source' => 'Источник звонка(API calltoch)',
 			'search_word' => 'Поисковая фраза(API calltouch)',
+            'site_id'=>'Сайт',
 		);
 	}
 
@@ -272,5 +353,89 @@ class Report extends CActiveRecord
         $rows = YiiBase::app()->db->createCommand($sql)->queryAll();
 
         return $rows;
+    }
+
+    /*
+      * формируем сслыку на скачивание файла аудио-записи разговора
+      */
+    public function getLinkDownloadRec(){
+
+        $link = '';
+
+        if(!empty($this->rec_call)){
+            $url_download = 'http://80.84.116.238/download.php?file='.date('Y/m/d/',strtotime($this->date_call)).$this->rec_call;
+            $link  = CHtml::link('Скачать',$url_download);
+
+
+            $div = $link.'<div id="'.$this->linkedid.'">
+                            <audio>
+                                <source src="'.$url_download.'" type="audio/x-wav" >
+                            </audio>
+                         </div>';
+
+            //return $div;
+        }
+
+        return $link;
+    }
+
+    /*
+       * экспорт данных в файл экспорта
+       */
+    //TODO доделать экспорт данных в файл, проверить все столбц ли экспортятся
+    public function exportToFile($dataProvider, $nameFile){
+        $h1 = iconv('utf-8', 'windows-1251//IGNORE','ID звонка');
+        $h2 = iconv('utf-8', 'windows-1251//IGNORE','Номер клиента');
+        $h3 = iconv('utf-8', 'windows-1251//IGNORE','DID');
+        $h4 = iconv('utf-8', 'windows-1251//IGNORE','Город звонка');
+        $h5 = iconv('utf-8', 'windows-1251//IGNORE','Дата звонка');
+        $h6 = iconv('utf-8', 'windows-1251//IGNORE','Время начала разговора');
+        $h7 = iconv('utf-8', 'windows-1251//IGNORE','Время конца разговора');
+        $h8 = iconv('utf-8', 'windows-1251//IGNORE','Продолжительность звонка');
+        $h9 = iconv('utf-8', 'windows-1251//IGNORE','Destination звонка');
+        $h10 = iconv('utf-8', 'windows-1251//IGNORE','Офис звонка');
+        $h11 = iconv('utf-8', 'windows-1251//IGNORE','Направление звонка');
+        $h12 = iconv('utf-8', 'windows-1251//IGNORE','Статус обработки звонка');
+        $h13 = iconv('utf-8', 'windows-1251//IGNORE','Менеджер звонка');
+        $h14 = iconv('utf-8', 'windows-1251//IGNORE','Время ожидания клиента');
+        $h15 = iconv('utf-8', 'windows-1251//IGNORE','Кол-во переадресаций');
+        $h16 = iconv('utf-8', 'windows-1251//IGNORE','Цепочка пройденных переадресаций');
+        $h17 = iconv('utf-8', 'windows-1251//IGNORE','Запись звонка');
+
+
+        $header = array($h1, $h2, $h3, $h4, $h5, $h6, $h7, $h8, $h9);
+
+        //создаём файл для экспорта, и с помощью ИТЕРАТОРА выбираем данные порциями и записываем их в файл, чтобы не было нихватки памяти по большой выборке данных
+        $out = fopen($nameFile, 'w');
+
+        //запишим заголовки столбцов
+        fputcsv($out, $header,';');
+
+        //теперь выборка через ИТЕРАТОР
+        // выбирем с помощью ИТЕРАТОРа по 5000 записей
+        $iterator=new CDataProviderIterator($dataProvider,1000);
+
+        // обходим данные для каждой строки из логов
+        foreach($iterator as $row){
+
+            $iterator->callOffice = mb_convert_encoding($iterator->callOffice, "windows-1251", "utf-8");
+
+            $data =  array(
+                $iterator->uniqueid,
+                $iterator->caller_id,
+                $iterator->did,
+                $iterator->call_city,
+                $iterator->date_call,
+                $iterator->time_start_call,
+                $iterator->time_end_call,
+                $iterator->duration_call,
+                $iterator->destination_call,
+                $iterator->callOffice,
+
+            );
+
+            fputcsv($out, $data,';');
+        }
+        fclose($out);
     }
 }

@@ -38,6 +38,23 @@ class OfficeManager extends CActiveRecord
 		);
 	}
 
+    /*
+     * получаем список офисов
+     * если указан код($code) - то возвращаем название конкретного офиса
+     */
+    static function getListOffice($code=''){
+        if(!empty($code)){
+            $list = self::getListOffice();
+            return $list[$code];
+        }else{
+            return array(
+                3=>'Электрозаводская',
+                4=>'Юбилейный',
+                5=>'Яблочково',
+            );
+        }
+    }
+
 	/**
 	 * @return array relational rules.
 	 */
