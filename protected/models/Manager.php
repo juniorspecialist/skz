@@ -104,6 +104,7 @@ class Manager extends CActiveRecord
 
     static function getCodeList(){
         $sql = 'SELECT code FROM {{manager}}';
+        $dependency = new CDbCacheDependency('SELECT MAX(id) FROM tbl_manager');
         $rows = YiiBase::app()->db->createCommand($sql)->queryAll();
         return $rows;
     }
@@ -113,7 +114,7 @@ class Manager extends CActiveRecord
      */
     static function getIdByCode($code){
         $sql = 'SELECT id  FROM {{manager}} WHERE code=:code';
-        $query = YiiBase::app()->db->createCommand($sql);
+        $query = YiiBase::app()->db->cache(1000)->createCommand($sql);
         $query->bindValue(':code', $code, PDO::PARAM_STR);
         $result = $query->queryRow();
         return $result['id'];
@@ -143,6 +144,8 @@ class Manager extends CActiveRecord
      * получаем список всех менеджеров
      */
     static function getListManagers(){
+
+        $dependency = new CDbCacheDependency('SELECT MAX(id) FROM tbl_manager');
 
         $sql = 'SELECT * FROM tbl_manager';
 

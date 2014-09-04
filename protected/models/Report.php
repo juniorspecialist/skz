@@ -39,10 +39,22 @@ class Report extends CActiveRecord
     const CALL_FAILED = 2;//не удачно позвонили
     const CALL_BUSY = 3;//занято
     const CALL_NO_ANSWER = 4;//нет ответа
+    const CALL_RESET_CLIENT = 5;//сброшено клиентом
 
+
+    //флаг, что звонок является автоперезвоном, т.е. был создан по заявке через сокеты
+    public $call_back = false;
 
     //public $accept_list = array();
 
+
+    //список статусов для автоперезвона
+    const CALL_BACK_SEND = 1;//отправили заявку на перезвон
+    const CALL_BACK_ACTION_CLIENT = 2;// перезвонили клиенту
+    const CALL_BACK_WAIT = 3;//ждёт отправки заявки на перезвон
+
+
+    public $cnt;
 
     /*
      * получаем список фильтров которые были применены для таблицы отчётов
@@ -56,39 +68,45 @@ class Report extends CActiveRecord
 
         foreach($_GET as $j=>$value){
 
+            //статус автоперезвона
+            if($this->call_back_status){$list[] = 'Статус автоперезвона';}
+
             //ID звонка
-            if($j=='search_word_accept_reg_uniqueid'){$list[] = 'ID звонка';}
+            if(!empty($_GET['search_word_accept_reg_uniqueid'])){$list[] = 'ID звонка';}
             //Номер клиента
-            if($j=='search_word_accept_reg_CallerId'){$list[] = 'Номер клиента';}
+            if(!empty($_GET['search_word_accept_reg_CallerId'])){$list[] = 'Номер клиента';}
             //
-            if($j=='search_word_accept_reg_Did'){$list[] = 'DID';}
+            if(!empty($_GET['search_word_accept_reg_Did'])){$list[] = 'DID';}
             //
-            if($j=='search_word_accept_reg_call_city'){$list[] = 'Город звонка';}
+            if(!empty($_GET['search_word_accept_reg_call_city'])){$list[] = 'Город звонка';}
             //
-            if($j=='DateCall_to' || $j=='DateCall_from'){$list[] = 'Дата звонка';}
+            if(!empty($_GET['DateCall_to']) || !empty($_GET['DateCall_from'])){$list[] = 'Дата звонка';}
             //
-            if($j=='TimeStartCall_from' || $j=='TimeStartCall_to'){$list[] = 'Время начала разговора';}
+            if(!empty($_GET['TimeStartCall_from']) || !empty($_GET['TimeStartCall_to'])){$list[] = 'Время начала разговора';}
             //
-            if($j=='TimeEndCall_from' || $j=='TimeEndCall_to'){$list[] = 'Время конца разговора';}
+            if(!empty($_GET['TimeEndCall_from']) || !empty($_GET['TimeEndCall_to'])){$list[] = 'Время конца разговора';}
             //
-            if($j=='DurationCallCall_from' || $j=='DurationCallCall_to'){$list[] = 'Продолжительность звонка';}
+            if(!empty($_GET['DurationCallCall_from']) || !empty($_GET['DurationCallCall_to'])){$list[] = 'Продолжительность звонка';}
             //
-            if($j=='search_word_accept_reg_dest'){$list[] = 'Destination звонка';}
+            if(!empty($_GET['search_word_accept_reg_dest'])){$list[] = 'Destination звонка';}
             //
 
             //
-            if(!empty($_GET['Report[site_id]'])){$list[] = 'Сайт';}
+            if(!empty($this->site_id)){$list[] = 'Сайт';}
             //
-            if($j=='Report[call_diraction]'){$list[] = 'Направление звонка';}
+            if(!empty($this->call_diraction)){$list[] = 'Направление звонка';}
             //
-            if($j=='Report[status_call]'){$list[] = 'Статус обработки звонка';}
+            if(!empty($this->status_call)){$list[] = 'Статус обработки звонка';}
             //
-            if($j=='Report[manager_call_id]'){$list[] = 'Менеджер звонка';}
+            if(!empty($this->manager_call_id)){$list[] = 'Менеджер звонка';}
             //
-            if($j=='TimeWait_from' || $j=='TimeWait_to'){$list[] = 'Время ожидания клиента';}
+            if(!empty($_GET['TimeWait_from']) || !empty($_GET['TimeWait_to'])){$list[] = 'Время ожидания клиента';}
             //
-            if($j=='CountRedirect_from' || $j=='CountRedirect_to'){$list[] = 'Кол-во переадресаций';}
-            if($j=='search_word_accept_reg_redirect'){$list[] = 'Цепочка пройденных переадресаций';}
+            if(!empty($_GET['CountRedirect_from']) || !empty($_GET['CountRedirect_to'])){$list[] = 'Кол-во переадресаций';}
+
+            if(!empty($_GET['search_word_accept_reg_redirect'])){$list[] = 'Цепочка пройденных переадресаций';}
+
+            if(!empty($this->office_call_id)){ $list[] = 'Офис звонка';}
         }
 
         $list = array_unique($list);
@@ -110,9 +128,19 @@ class Report extends CActiveRecord
             2=>'FAILED',
             3=>'Занято',
             4=>'Нет ответа',
+            5=>'Сброшено клиентом',
         );
     }
 
+
+    /*
+     * определяем статус звонка для таблицы отчёта
+     */
+    public function getStatusToTbl(){
+        if($this->status_call==Report::CALL_ANSWERED){return 'Отвечен';}
+        if($this->status_call==Report::CALL_NO_ANSWER){return 'Не отвечен';}
+        if($this->status_call==Report::CALL_RESET_CLIENT){return 'Сброшен клиентом';}
+    }
 
 
     /*
@@ -134,6 +162,7 @@ class Report extends CActiveRecord
         if($string_status_call=='ANSWERED'){ return 1; }
         if($string_status_call=='FAILED'){ return 2; }
         if($string_status_call=='NO ANSWER'){ return 4; }
+        if($string_status_call=='RESET_CLIENT'){return 5;}
     }
 
 	/**
@@ -145,16 +174,17 @@ class Report extends CActiveRecord
 		// will receive user inputs.
 		return array(
             //, waiting_time, count_redirect, chain_passed_redirects, rec_call, source, search_word
-            //call_city,caller_id,did,destination_call,time_end_call,
-			array('uniqueid,  date_call, time_start_call,  duration_call, destination_call, call_diraction, status_call,  linkedid', 'required'),
+            //call_city,did,destination_call,time_end_call, destination_call,
+			array('uniqueid,  date_call, time_start_call,  call_diraction, status_call,  linkedid, caller_id', 'required'),
 
             //проверим заполнение менеджера по звонку, если статус у звонка отвечен
             array('manager_call_id', 'check_manager'),
 
-			array('duration_call,  call_diraction, status_call, manager_call_id, waiting_time, count_redirect, phone_region_id, site_id', 'numerical', 'integerOnly'=>true),
-			array('uniqueid, linkedid, caller_id, destination_call, call_city, office_call_id', 'length', 'max'=>60),
+			array('duration_call,  call_diraction, status_call, manager_call_id, waiting_time, count_redirect, phone_region_id, site_id, call_back_status', 'numerical', 'integerOnly'=>true),
+			array('uniqueid, linkedid, caller_id, destination_call, call_city, office_call_id,call_back_linkdid', 'length', 'max'=>60),
 			array('did', 'length', 'max'=>40),
-			array('chain_passed_redirects, rec_call, search_word', 'length', 'max'=>256),
+			array('rec_call, search_word', 'length', 'max'=>256),
+            //array('chain_passed_redirects', 'length', 'max'=>512),
 			array('source', 'length', 'max'=>250),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -170,8 +200,10 @@ class Report extends CActiveRecord
      */
     public function check_manager(){
         if(!$this->hasErrors()){
-            if($this->status_call!=self::CALL_BUSY && $this->status_call!=self::CALL_NO_ANSWER && empty($this->manager_call_id)){
-                $this->addError('manager_call_id', 'Не указан менеджер принвяший звонок');
+            if(!$this->call_back){
+                if($this->status_call!=self::CALL_BUSY && $this->status_call!=self::CALL_NO_ANSWER &&$this->status_call!=self::CALL_RESET_CLIENT  && empty($this->manager_call_id)){
+                    $this->addError('manager_call_id', 'Не указан менеджер принвяший звонок');
+                }
             }
         }
     }
@@ -234,22 +266,6 @@ class Report extends CActiveRecord
         }*/
     }
 
-    /*
-    public function getSite(){
-        if($this->site_id!=0){
-            return $this->
-        }
-    }*/
-
-    /*
-    public function getCallCity(){
-        if($this->call_city==0){
-            return '';
-        }else{
-            return City::getCityById($this->call_city);
-        }
-    }*/
-
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -278,8 +294,39 @@ class Report extends CActiveRecord
 			'source' => 'Источник звонка(API calltoch)',
 			'search_word' => 'Поисковая фраза(API calltouch)',
             'site_id'=>'Сайт',
+            'call_back_status'=>'Автоперезвон',
+            'call_back_linkdid'=>'linkdid автоперезвона по этому пропущенному звонку',
 		);
 	}
+
+    /*
+     * получаем список автоперезвона
+     */
+    public function getCallbackstatus(){
+        if(!empty($this->call_back_status) && $this->call_back_status!==0){
+            //определяем статус автоперезвона
+            if($this->call_back_status==Report::CALL_BACK_WAIT){
+                return 'Ждёт отправки заявки на перезвон';
+            }
+
+            if($this->call_back_status==Report::CALL_BACK_SEND){
+                return 'Отправили заявку на перезвон';
+            }
+
+            if($this->call_back_status==Report::CALL_BACK_ACTION_CLIENT){
+                return 'Перезвонили клиенту';
+            }
+        }
+    }
+
+    /*
+     * возвращаем список статусов для автоперезвона
+     */
+    static function getCallbackstatusList(){
+        return array(
+            0=>''
+        );
+    }
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -437,5 +484,105 @@ class Report extends CActiveRecord
             fputcsv($out, $data,';');
         }
         fclose($out);
+    }
+
+    /*
+     * после записи информации о звонке:
+     * запишим данные для очереди автодозвона, если они нужны
+     */
+
+    protected function afterSave() {
+        parent::afterSave();
+        if ($this->isNewRecord) {
+            //проверяем статус звонка, чтобы добавить его в очередь автоперезвона
+            if($this->call_diraction==Report::INCOMING_CALL && !$this->call_back){//ТОЛЬКО ВХОДЯЩИЙ
+                if($this->status_call==Report::CALL_NO_ANSWER || $this->status_call==Report::CALL_RESET_CLIENT){
+
+                    //установим статус у пропущенной заявки - как ждёт отправки заявки на перезвон
+                    YiiBase::app()->db->createCommand('UPDATE {{report}} SET call_back_status="'.self::CALL_BACK_WAIT.'" WHERE id="'.$this->id.'"')->execute();
+
+                    //есть список номеров исключений, которые мы исключаем из перезвона
+                    $exeption_list = Yii::app()->params['call_back_exeption_list'];
+
+                    //проверим номер в списке исключений+ если номер определился корректно
+                    if(!in_array($this->caller_id,$exeption_list) && preg_match('/[0-9]{7,15}/',$this->caller_id)){
+
+                        $call_back = new Callback();
+                        $call_back->client_number = $this->caller_id;
+                        //если офис не указан у звонка(статус - сброшен клиентом)
+                        if(empty($this->office_call_id) || $this->office_call_id==0){
+                            //укажим офис - 300 электрозавод
+                            $call_back->office = 3;//электрозавод
+                        }else{
+                            $call_back->office = $this->office_call_id;
+                        }
+                        //0000-00-00 00:00:00
+                        $call_back->call_date = date('Y-m-d H:i:s',strtotime($this->date_call.' '.$this->time_start_call));
+                        $call_back->linkedid = trim($this->linkedid);
+                        $call_back->status = 2;
+                        $call_back->site = Site::getSiteById($this->site_id);//укажем для какого сайта был звонок
+                        if(!$call_back->save()){
+                            echo '<pre>'; print_r($call_back->errors);
+                        }else{
+                            //echo '<pre>'; print_r($this->linkedid);
+                            //echo '<pre>'; print_r($call_back->linkedid);//die();
+                        }
+                    }
+
+                }
+            }
+
+            //был автоперезвон, по ранее отправленной заявке
+            //подвязываем к пропущенному звонку текущий звонок+укажем статус перезвона(для пропущенного звонка)
+            if($this->call_back){
+                $this->callBackUpdateInfo();
+            }
+        }
+    }
+
+    /*
+     * обновим информацию о результатах обратного звонка
+     */
+    public function callBackUpdateInfo(){
+
+        if($this->office_call_id==0 || empty($this->office_call_id)){
+            $office_call_id = 3;//электрозавод
+        }else{
+            $office_call_id = $this->office_call_id;
+        }
+
+        $sql = 'SELECT linkedid, id FROM tbl_call_back WHERE client_number="'.$this->caller_id.'" AND office="'.$office_call_id.'"  ORDER BY id DESC';//AND status="'.Callback::SEND_CALL.'"
+
+        $find_call = YiiBase::app()->db->createCommand($sql);
+        $find_row = $find_call->queryRow();
+
+        if(!empty($find_row)){
+            //привяжем звонок из перезвона со входящим пропущенным звонком от клиента
+            //т.е. сперва найдём пропущенный звонок из раннее сделанных+ привяжем к нему инфу о текущем звонке и удалим из очереди заявку на перезвон
+            $sql_update = 'UPDATE tbl_report SET call_back_linkdid=:call_back_linkdid,call_back_status=:call_back_status WHERE linkedid=:linkedid';
+            $query_update = YiiBase::app()->db->createCommand($sql_update);
+            $query_update->bindValue(':call_back_linkdid',$this->uniqueid, PDO::PARAM_STR);
+            $query_update->bindValue(':call_back_status',self::CALL_BACK_ACTION_CLIENT, PDO::PARAM_INT);
+            $query_update->bindValue(':linkedid',$find_row['linkedid'], PDO::PARAM_INT);
+            $query_update->execute();
+
+            /*
+             * обновим статус у пропущенных звонков за сегодня по данному номеру
+             */
+            $upd_sql = 'UPDATE tbl_report SET call_back_linkdid=:call_back_linkdid,call_back_status=:call_back_status WHERE caller_id=:caller_id AND date_call=:date_call';
+            $query_update_ = YiiBase::app()->db->createCommand($upd_sql);
+            $query_update_->bindValue(':call_back_linkdid',$this->uniqueid, PDO::PARAM_STR);
+            $query_update_->bindValue(':call_back_status',self::CALL_BACK_ACTION_CLIENT, PDO::PARAM_INT);
+            $query_update_->bindValue(':caller_id',$this->caller_id, PDO::PARAM_STR);
+            $query_update_->bindValue(':date_call',$this->date_call, PDO::PARAM_STR);
+            $query_update_->execute();
+
+
+            //теперь удалим из очереди автодозвона заявку, по которой был авто-дозвон
+            $sql_delete = 'DELETE FROM tbl_call_back WHERE id=:id';
+            $query_delete = YiiBase::app()->db->createCommand($sql_delete)->bindValue(':id', $find_row['id'], PDO::PARAM_INT)->execute();
+        }else{
+            echo $this->linkedid.'|empty find linkedid,id from tbl_call_back='.$sql.PHP_EOL;
+        }
     }
 }

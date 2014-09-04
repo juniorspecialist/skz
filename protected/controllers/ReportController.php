@@ -21,7 +21,10 @@ class ReportController extends Controller {
 
         $criteria=new CDbCriteria;
 
-        $criteria->compare('site_id',$model->site_id);
+        if(!empty($model->site_id)){
+            //$criteria->compare('site_id',$model->site_id);
+            $criteria->condition = 'site_id='.$model->site_id;
+        }
 
         //фильтрация - Кол-во переадресаций(интервал)
         if(isset($_GET['CountRedirect_from'])){
@@ -87,8 +90,11 @@ class ReportController extends Controller {
         if(isset($_GET['DateCall_from'])){
             if(!empty($_GET['DateCall_from'])){
                 $criteria->addCondition("date_call>='".$_GET['DateCall_from']."'");
+
             }
         }
+
+
         if(isset($_GET['DateCall_to'])){
             if(!empty($_GET['DateCall_to'])){
                 $criteria->addCondition("date_call<='".$_GET['DateCall_to']."'");
@@ -97,21 +103,26 @@ class ReportController extends Controller {
 
 
         if ($model->call_diraction){
-            $criteria->compare('call_diraction', $model->call_diraction);
+            $criteria->addCondition("call_diraction='".$model->call_diraction."'");
         }
         //фильтр по менеджеру
         if($model->manager_call_id){
-            $criteria->compare('manager_call_id', $model->manager_call_id);
+            $criteria->addCondition("manager_call_id='".$model->manager_call_id."'");
         }
 
         //статус обработки Звонка
         if($model->status_call){
-            $criteria->compare('status_call', $model->status_call);
+            $criteria->addCondition("status_call='".$model->status_call."'");
         }
 
         //фильтруем по офису
         if($model->office_call_id){
-            $criteria->compare('office_call_id', $model->office_call_id);
+            $criteria->addCondition("office_call_id='".$model->office_call_id."'");
+        }
+
+        //фильтруем по статусу автоперезвона
+        if($model->call_back_status){
+            $criteria->addCondition("call_back_status='".$model->call_back_status."'");
         }
 
         //==========фильтрация по регулярному выражению или отрацание по регулярке============================
@@ -121,11 +132,14 @@ class ReportController extends Controller {
             if(!empty($_GET['radio_selected_uniqueid']) && !empty($_GET['search_word_accept_reg_uniqueid'])){
                 //2 типа удовлетворяет регулярке или нет по регулярке
                 if($_GET['radio_selected_uniqueid']=='search_word_accept_uniqueid'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("uniqueid REGEXP '".$_GET['search_word_accept_reg_uniqueid']."'");
+                    //$criteria->addCondition("uniqueid REGEXP '".$_GET['search_word_accept_reg_uniqueid']."'");
+                    $criteria->addCondition('uniqueid  REGEXP "'.$_GET['search_word_accept_reg_uniqueid'].'"');
                 }else{
                     //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("uniqueid NOT REGEXP '".$_GET['search_word_accept_reg_uniqueid']."'");
+                    //$criteria->addCondition("uniqueid NOT REGEXP '".$_GET['search_word_accept_reg_uniqueid']."'");
+                    $criteria->addCondition('uniqueid NOT  REGEXP "'.$_GET['search_word_accept_reg_uniqueid'].'"');
                 }
+                //$criteria->params = array(':uniqueid'=>$_GET['search_word_accept_reg_uniqueid']);
             }
         }
 
@@ -134,11 +148,14 @@ class ReportController extends Controller {
             if(!empty($_GET['radio_selected_CallerId']) && !empty($_GET['search_word_accept_reg_CallerId'])){
                 //2 типа удовлетворяет регулярке или нет по регулярке
                 if($_GET['radio_selected_CallerId']=='search_word_accept_CallerId'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("caller_id REGEXP '".$_GET['search_word_accept_reg_CallerId']."'");
+                    //$criteria->addCondition("caller_id REGEXP '".$_GET['search_word_accept_reg_CallerId']."'");
+                    $criteria->addCondition('caller_id  REGEXP "'.$_GET['search_word_accept_reg_CallerId'].'"');
                 }else{
                     //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("caller_id NOT REGEXP '".$_GET['search_word_accept_reg_CallerId']."'");
+                    //$criteria->addCondition("caller_id NOT REGEXP '".$_GET['search_word_accept_reg_CallerId']."'");
+                    $criteria->addCondition('caller_id NOT REGEXP "'.$_GET['search_word_accept_reg_CallerId'].'"');
                 }
+                //$criteria->params = array(':caller_id'=>$_GET['search_word_accept_reg_CallerId']);
             }
         }
         //проверим и примениним - ФИЛЬТРАЦИЮ по DID(РЕГУЛЯРКА)
@@ -146,11 +163,14 @@ class ReportController extends Controller {
             if(!empty($_GET['radio_selected_Did']) && !empty($_GET['search_word_accept_reg_Did'])){
                 //2 типа удовлетворяет регулярке или нет по регулярке
                 if($_GET['radio_selected_Did']=='search_word_accept_Did'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("did REGEXP '".$_GET['search_word_accept_reg_Did']."'");
+                    //$criteria->addCondition("did REGEXP '".$_GET['search_word_accept_reg_Did']."'");
+                    $criteria->addCondition('did REGEXP "'.$_GET['search_word_accept_reg_Did'].'"');
                 }else{
                     //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("did NOT REGEXP '".$_GET['search_word_accept_reg_Did']."'");
+                    //$criteria->addCondition("did NOT REGEXP '".$_GET['search_word_accept_reg_Did']."'");
+                    $criteria->addCondition('did NOT REGEXP "'.$_GET['search_word_accept_reg_Did'].'"');
                 }
+                //$criteria->params = array(':did'=>$_GET['search_word_accept_reg_Did']);
             }
         }
         //проверим и примениним - ФИЛЬТРАЦИЮ по call_city(РЕГУЛЯРКА)
@@ -158,11 +178,14 @@ class ReportController extends Controller {
             if(!empty($_GET['radio_selected_call_city']) && !empty($_GET['search_word_accept_reg_call_city'])){
                 //2 типа удовлетворяет регулярке или нет по регулярке
                 if($_GET['radio_selected_call_city']=='search_word_accept_call_city'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition(" call_city REGEXP '".$_GET['search_word_accept_reg_call_city']."'");
+                    //$criteria->addCondition(" call_city REGEXP '".$_GET['search_word_accept_reg_call_city']."'");
+                    $criteria->addCondition('call_city REGEXP "'.$_GET['search_word_accept_reg_call_city'].'"');
                 }else{
                     //не удовлетворяет регулярному выражению
-                    $criteria->addCondition(" call_city NOT REGEXP '".$_GET['search_word_accept_reg_call_city']."'");
+                    //$criteria->addCondition(" call_city NOT REGEXP '".$_GET['search_word_accept_reg_call_city']."'");
+                    $criteria->addCondition('call_city NOT REGEXP "'.$_GET['search_word_accept_reg_call_city'].'"');
                 }
+                //$criteria->params = array(':call_city'=>$_GET['search_word_accept_reg_call_city']);
             }
         }
         //проверим и примениним - ФИЛЬТРАЦИЮ по Destination(РЕГУЛЯРКА)
@@ -170,11 +193,14 @@ class ReportController extends Controller {
             if(!empty($_GET['radio_selected_dest']) && !empty($_GET['search_word_accept_reg_dest'])){
                 //2 типа удовлетворяет регулярке или нет по регулярке
                 if($_GET['radio_selected_dest']=='search_word_accept_dest'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition("destination_call REGEXP '".$_GET['search_word_accept_reg_dest']."'");
+                    //$criteria->addCondition("destination_call REGEXP '".$_GET['search_word_accept_reg_dest']."'");
+                    $criteria->addCondition('destination_call REGEXP "'.$_GET['search_word_accept_reg_dest'].'"');
                 }else{
                     //не удовлетворяет регулярному выражению
-                    $criteria->addCondition("destination_call NOT REGEXP '".$_GET['search_word_accept_reg_dest']."'");
+                    //$criteria->addCondition("destination_call NOT REGEXP '".$_GET['search_word_accept_reg_dest']."'");
+                    $criteria->addCondition('destination_call NOT REGEXP "'.$_GET['search_word_accept_reg_dest'].'"');
                 }
+                //$criteria->params = array(':destination_call'=>$_GET['search_word_accept_reg_dest']);
             }
         }
         //проверим и примениним - ФИЛЬТРАЦИЮ по Цепочка пройденных переадресаций(РЕГУЛЯРКА)
@@ -182,16 +208,25 @@ class ReportController extends Controller {
             if(!empty($_GET['radio_selected_redirect']) && !empty($_GET['search_word_accept_reg_redirect'])){
                 //2 типа удовлетворяет регулярке или нет по регулярке
                 if($_GET['radio_selected_redirect']=='search_word_accept_redirect'){//удовлетворяет регулярному выражению
-                    $criteria->addCondition('chain_passed_redirects REGEXP "'.mysql_real_escape_string($_GET["search_word_accept_reg_redirect"]).'"');
-                    //$criteria->addCondition('chain_passed_redirects REGEXP ":chain_passed_redirects"');
+                    //$criteria->addCondition("chain_passed_redirects REGEXP ".$_GET["search_word_accept_reg_redirect"])."";
+                    //$criteria->addCondition("chain_passed_redirects REGEXP ".$_GET["search_word_accept_reg_redirect"])."";
+                    $criteria->addCondition('chain_passed_redirects REGEXP "'.$_GET['search_word_accept_reg_redirect'].'"');
                 }else{
                     //не удовлетворяет регулярному выражению
-                    $criteria->addCondition('chain_passed_redirects NOT REGEXP "'.mysql_real_escape_string($_GET["search_word_accept_reg_redirect"]).'"');
-                    //$criteria->addCondition('chain_passed_redirects NOT REGEXP ":chain_passed_redirects"');
+                    //$criteria->addCondition("chain_passed_redirects NOT REGEXP '".$_GET["search_word_accept_reg_redirect"]."'");
+                    $criteria->addCondition('chain_passed_redirects NOT REGEXP "'.$_GET['search_word_accept_reg_redirect'].'"');
                 }
                 //$criteria->params = array(':chain_passed_redirects'=>$_GET["search_word_accept_reg_redirect"]);
             }
         }
+
+        //============================SUB QUERY======================================
+        $criteria1=new CDbCriteria();
+        $criteria1->mergeWith($criteria);
+        $criteria1->select='count(DISTINCT(caller_id))';
+        $subQuery = $model->getCommandBuilder()->createFindCommand($model->getTableSchema(),$criteria1)->getText();
+
+        $model->cnt = YiiBase::app()->db->createCommand($subQuery)->queryScalar();
 
         //возможно хотим экспортнуть данные в файл
         if(isset($_GET['export'])){
@@ -219,6 +254,7 @@ class ReportController extends Controller {
             ),
             //'sort' => array('attributes' => array('uniqueid', 'caller_id', 'val')),
         ));
+
 
         $this->render('report',array(
             'model'=>$model,

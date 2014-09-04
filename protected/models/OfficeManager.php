@@ -45,7 +45,7 @@ class OfficeManager extends CActiveRecord
     static function getListOffice($code=''){
         if(!empty($code)){
             $list = self::getListOffice();
-            return $list[$code];
+            return isset($list[$code])?$list[$code]:$code;
         }else{
             return array(
                 3=>'Электрозаводская',

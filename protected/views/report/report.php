@@ -8,10 +8,11 @@
 
 echo  "<strong>Список примененных фильтров:".$model->AcceptList.'</strong>';
 
-$this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('GridView', array(
     'id'=>'report-grid',
     'dataProvider'=>$dataProvider,
     'filter'=>$model,
+    'distinct_caller_phone'=>$model->cnt,
     //'template'=>'{items}{pager}',
     'ajaxUpdate'=>false,
     //'enableSorting'=>true,
@@ -110,8 +111,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             //'value'=>'$data->statuscall',
              'name'=>'status_call',
             //'value'=>'$data->status_call',
-            'value'=>'($data->status_call==1)? "Отвечен":"Не отвечен"',
-            'filter' => array(Report::CALL_ANSWERED => 'Отвечен', Report::CALL_NO_ANSWER => 'Не отвечен'),
+            //'value'=>'($data->status_call==1)? "Отвечен":"Не отвечен"',
+            'value'=>'$data->StatusToTbl',
+            'filter' => array(Report::CALL_ANSWERED => 'Отвечен', Report::CALL_NO_ANSWER => 'Не отвечен', Report::CALL_RESET_CLIENT=>'Сброшен клиентом'),
         ),
 
         array(
@@ -150,13 +152,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
             //'value'=>'$data->rec_call',
             'value'=>'$data->LinkDownloadRec',
         ),
-            /*
+
         array(
-            'header'=>'Источник звонка',
+            'header'=>'Автоперезвон',
             'type'=>'raw',
-            'name'=>'source',
-            'value'=>'$data->source',
+            'name'=>'call_back_status',
+            'value'=>'$data->callbackstatus',
+            'filter' => array(Report::CALL_BACK_WAIT => 'Ждёт отправки заявки на перезвон', Report::CALL_BACK_SEND => 'Отправили заявку на перезвон', Report::CALL_BACK_ACTION_CLIENT=>'Перезвонили клиенту'),
         ),
+            /*
         array(
             'header'=>'Поисковая фраза',
             'type'=>'raw',

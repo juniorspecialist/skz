@@ -30,8 +30,9 @@ class Site extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('site, ', 'required'),
-			array('site', 'length', 'max'=>250),
+			array('site, queue', 'required'),
+			array('site,queue', 'length', 'max'=>250),
+
 			//array('clientApiId, idSiteInCallTouche', 'length', 'max'=>256),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -59,6 +60,7 @@ class Site extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'site' => 'Сайт',
+            'queue'=>'номер очереди которая подвязана к сайту'
 			//'clientApiId' => 'Уникальный идентификатор, ключ для отправки запроса в CallTouch',
 			//'idSiteInCallTouche' => 'id сайта в системе кол-тача',
 		);
@@ -121,4 +123,19 @@ class Site extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+    /*
+     * получаем код-очереди по названию сайта
+     */
+    static function getQueueByNameSite($site){
+        //ищем по названию сайта код -очереди соответствия
+        if(!empty($site)){
+            $sql = 'SELECT queue FROM {{site}} WHERE site=:site';
+            $query = YiiBase::app()->db->cache(1000)->createCommand($sql)->bindValue(':site', $site, PDO::PARAM_STR);
+            return $query->queryScalar();
+        }else{
+            //неопределено    х00
+            return '00';
+        }
+    }
 }

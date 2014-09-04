@@ -95,46 +95,68 @@ class CallPhone{
 
                 $row = $query->queryRow();
 
+                //проверим отфильтровываем ли мы этот ЛИНК_ДИД или нет
+                $events = $this->checkCall($link_did['linkedid']);
+
+                //если нет инфы, звонок нам не подходит, то пропускаем его
+                if(empty($events)){continue;}
+
+                $model = new Report();
+
                 if(!empty($row)){
-
-                    //проверим отфильтровываем ли мы этот ЛИНК_ДИД или нет
-                    $events = $this->checkCall($link_did['linkedid']);
-
-                    //если нет инфы, звонок нам не подходит, то пропускаем его
-                    if(empty($events)){continue;}
-
-                    $model = new Report();
                     //уникальный ID звонка это поле "linkedid" в таблице событий(cdr),т.е. может быть несколько "uniqueid" подвязанных к одному звонку(linkedid)
                     $model->uniqueid = $row['uniqueid'];
                     $model->linkedid = $this->getUniqueIdCall($row['uniqueid']);
                     $model->date_call  = self::getDateFromDateTime($row['calldate']);//'дата звонка в формате год месяц число',
                     $model->time_start_call  = self::getTimeFromDateTime($row['calldate']);//Время начала разговора
                     $model->rec_call  = $row['recordingfile'];//'Запись звонка',
-                    //$model->duration_call  = $row['duration'];//'Продолжительность звонка',
+                }else{
+
+                    //уникальный ID звонка это поле "linkedid" в таблице событий(cdr),т.е. может быть несколько "uniqueid" подвязанных к одному звонку(linkedid)
+                    $model->uniqueid = $link_did['linkedid'];
+                    $model->linkedid = $link_did['linkedid'];
+
+                    $model->rec_call  = '';//'Запись звонка',appname
+                }
+
+                //отлавливаем и просчитываем события и пишим их в модель
+                $model = $this->callPhoneEvents($model, $events);
+
+                //определяем сайт для входящего звонка
+                if(empty($model->site_id)){
+                    $site_id = PhoneRegions::getSiteByDid($model->did);
+                    if(!empty($site_id)){
+                        $model->site_id = $site_id['site_id'];
+                    }
+                }
+
+
+                $model->caller_id = str_replace('+', '',$model->caller_id);
+
+                //если звонок ИСХОДЯЩИЙ, не пишим Дестинейшин
+                if($model->call_diraction == Report::OUTGOING_CALL){
+                    $model->destination_call = '';//'Destination звонка',
+                    //при исходящем звонке определяем город по тому, куда звонит менеджер, по номеру клиента
+                    $model->call_city  = City::getCityByPhone($model->caller_id);//'Город звонка',
+                }else{
                     $model->destination_call = $row['dst'];//'Destination звонка',
-                    //отлавливаем и просчитываем события и пишим их в модель
-                    $model = $this->callPhoneEvents($model, $events);
                     $model->call_city  = City::getCityByPhone($model->did);//'Город звонка',
+                }
 
-                    //определяем сайт для входящего звонка
-                    if(empty($model->site_id)){
-                        $site_id = PhoneRegions::getSiteByDid($model->did);
-                        if(!empty($site_id)){
-                            $model->site_id = $site_id['site_id'];
-                        }
-                    }
+                /*
+                 * сброшен клиентом
+                 * s в столбце дестинейшен) описывает ситуацию, когда вызов сброшен клиентом на стадии "приветствие".
+                 * Необходимо ввести статус обработки звонка "сброшен клиентом" в столбце Статус обработки звонка
+                 */
+                if($model->destination_call=='s'){$model->status_call = Report::CALL_RESET_CLIENT;}
 
-                    //'Офис звонка',
-                    if(empty($model->office_call_id)){
-                        //$find_office = OfficeManager::getIdByCode($model->destination_call);
-                        //if(!empty($find_office)){$model->office_call_id = $find_office;}
-                    }
-                    if($model->validate()){
-                        $model->save();
-                    }else{
-                        echo '<pre>'; print_r($model->errors);
-                        echo '<pre>'; print_r($model->attributes);
-                    }
+
+                //echo '<pre>'; print_r($model->attributes);echo ('call_back='.$model->call_back); die();
+                if($model->validate()){
+                    $model->save();
+                }else{
+                    echo '<pre>'; print_r($model->errors);
+                    echo '<pre>'; print_r($model->attributes);
                 }
             }
         }
@@ -194,16 +216,31 @@ class CallPhone{
      */
     public function getUniqueLinkDidList(){
 
+        //AND `linkedid`="1407399661.31900"
+        //AND `linkedid`="1407736201.70375"
+        //AND `linkedid`="1407850917.92741"
         $sql = 'SELECT DISTINCT (linkedid)
                 FROM cel
                 WHERE `eventtime` > SUBDATE(CURRENT_TIMESTAMP , INTERVAL :minute MINUTE)
+                AND eventtype="LINKEDID_END"
+
                 ORDER BY eventtime DESC';
 
         $query = YiiBase::app()->db2->createCommand($sql);
 
-        $query->bindValue(':minute', intval($this->intervalMinuts+3), PDO::PARAM_INT);
+        $query->bindValue(':minute', intval($this->intervalMinuts+4), PDO::PARAM_INT);
 
-        return $query->queryAll();
+
+
+        $rows = $query->queryAll();
+
+        return $rows;
+    }
+
+    public function findRecByUnique($unique){
+        $sql = 'SELECT recordingfile  FROM `cdr` WHERE `uniqueid` LIKE :unique';
+        $rec = YiiBase::app()->db2->createCommand($sql)->bindParam(':unique',$unique, PDO::PARAM_STR)->queryScalar();
+        return $rec;
     }
 
     /*
@@ -225,8 +262,23 @@ class CallPhone{
 
         $second_can_start = false;
 
-        //отлавливаем нужные события и пишим их в массив
         foreach($events as $index=>$event){
+
+            //определяем файл записи разговора
+            if(empty($model->rec_call) && $event['appname']=='Answer'){
+                $model->rec_call  = $this->findRecByUnique($event['uniqueid']);//'Запись звонка',
+            }
+
+            //проверка на АВТОДОЗВОН - совпадение в описании звонка по регулярке
+            if(!$model->call_back){
+                if(preg_match('/(.*?)_(.*?):(.*?)_(.*?)/',$event['cid_name'])){$model->call_back = true;$model->call_diraction = Report::OUTGOING_CALL;}
+            }
+
+            //заглушка, для исходящих звонков
+            if(preg_match('/CID:/',$event['cid_name']) && empty($model->caller_id)){
+                $model->caller_id = $event['cid_num'];
+                $model->call_diraction = Report::OUTGOING_CALL;//исходящий звонок
+            }
 
             //отлавливаем направление звонка, определяем по короткому коду во втором "chan_start" в списке событий по звонку
             if($event['eventtype']=='CHAN_START' && $second_can_start && empty($model->office_call_id)){
@@ -237,6 +289,14 @@ class CallPhone{
             }
             //отлавливаем ВТОРОЕ открытие канала для звонка
             if($event['eventtype']=='CHAN_START' && empty($model->office_call_id) && !$second_can_start){
+
+                $model->date_call  = self::getDateFromDateTime($event['eventtime']);//'дата звонка в формате год месяц число',
+                $model->time_start_call  = self::getTimeFromDateTime($event['eventtime']);//Время начала разговора
+
+
+                if(empty($event['cid_name']) && empty($event['cid_num'])){
+                    $model->call_back = true;$model->call_diraction = Report::OUTGOING_CALL;
+                }
                 $second_can_start = true;
             }
 
@@ -262,12 +322,22 @@ class CallPhone{
                         $model->manager_call_id = CallPhone::getManagerByCode($event['cid_num']);
                     }
 
+                    if(strlen($event['cid_num'])>8){
+                        //УКАЖИМ НА КАКОЙ НОМЕР ЗВОНИЛ МЕНЕДЖЕР
+                        $model->caller_id = $event['cid_num'];
+                    }else{
+                        if($event['exten']=='29934'){$model->caller_id = '78007756046';}if($event['exten']=='167465'){$model->caller_id = '74952409192';}
+                    }
+                    //определяем ОФИС исходящего звонка по первой цифре из КОДА менеджера
+                    $model->office_call_id = mb_substr($event['cid_num'],0,1);
                 }
             }
 
             //определим - Номер клиента (Caller ID)
-            if(empty($model->caller_id) && !empty($event['cid_num'])){
-                $model->caller_id = str_replace('+','',$event['cid_num']);
+            if(empty($model->caller_id) && !empty($event['cid_num']) && strlen($event['cid_num'])>8){
+                //$model->caller_id = str_replace('+','',$event['cid_num']);
+            }else{
+                //if($event['cid_num']=='29934'){$model->caller_id = '78007756046';}if($event['cid_num']=='167465'){$model->caller_id = '74952409192';}
             }
 
             //ищем номер на который позвонил клиент в списке событий+проверим его наличие в БД на совпадение
@@ -300,69 +370,81 @@ class CallPhone{
             if($event['eventtype']=='ANSWER'){
 
                 $answered_call = true;//ответил кто-то на звонок
+                if(!$model->call_back){
 
-                //определяем ОФИС для ответа оп звонку
-                /*
-                if(strlen($event['exten'])>2 && strlen($event['exten'])<6 && empty($model->office_call_id)){//если длина строки подходит - ищием воспадение по коду-строке
-                    //$model->office_call_id = Manager::getIdByCode($event['exten']);//'Офис звонка',
-                    $find_office_id = OfficeManager::getIdByCode($event['exten']);//'Офис звонка',
-
-                    if(!empty($find_office_id)){
-
-                        $model->office_call_id = $find_office_id;
+                    //если не указан номер телефона клиента, поищем по длине номера
+                    if(empty($model->caller_id) && strlen($event['cid_num'])>7){
+                        $model->caller_id = str_replace('+','',$event['cid_num']);
                     }
-                }*/
 
-                //определим менеджера по звонку
-                if(!empty($event['cid_num']) && strlen($event['cid_num'])<6 ){//1403882248.44748   && empty($model->manager_call_id)
+                    //определим менеджера по звонку
+                    if(!empty($event['cid_num']) && strlen($event['cid_num'])<6 ){//1403882248.44748   && empty($model->manager_call_id)
 
-                    $find_manager = CallPhone::getManagerByCode($event['cid_num']);
+                        $find_manager = CallPhone::getManagerByCode($event['cid_num']);
 
-                    if(!empty($find_manager)){
+                        if(!empty($find_manager)){
 
-                        $model->manager_call_id  = $find_manager;
+                            $model->manager_call_id  = $find_manager;
 
-                        if(empty($time_last_answer)){$time_last_answer = $event['eventtime'];}
+                            if(empty($time_last_answer)){$time_last_answer = $event['eventtime'];}
+                        }
+                    }
+                }else{
+                    if(preg_match('/(.*?)_(.*?):(.*?)_(.*?)/',$event['cid_name']) && strlen($event['cid_num'])>8){
+                        $model->caller_id = str_replace('+','',$event['cid_num']);
+                    }else{
+                        if($event['exten']=='29934'){$model->caller_id = '78007756046';}if($event['exten']=='167465'){$model->caller_id = '74952409192';}
                     }
                 }
-
-            }
-
-
-            //отлавливаем редиректы по звонкам
-            if($event['eventtype']=='ATTENDEDTRANSFER'){//нашли переадресацию звонка,фиксируем цепочку переадресаций
-                //$redirect_list[] = $event['cid_num'];
-                //откуда перенаправили звонок(с менеджера А)
-                //array_push($redirect_list, $event['cid_num']);//добавим в конец массива менеджера
-                //$redirect_list[] = $event['cid_dnid'];
-                // куда перенаправили звонок (на менеджера Б)
-                //array_push($redirect_list, $event['cid_dnid']);//добавим в конец массива менеджера
             }
         }
 
-        //если нашли менеджера по звонку, значит звонок был - отвечен, если НЕ нашли, значит не отвечен
-        if(empty($model->manager_call_id)){
-            $model->status_call =  Report::CALL_NO_ANSWER;
+        //если номер телефона не определили из списка событий, то пройдёмся про списку событий ещё раз+ берём первый самый длшинный номер из всех
+        if(empty($model->caller_id)){
+            foreach($events as $index=>$event_new){
+                if(preg_match('/[0-9]{6,11}/',$event_new['cid_num'])){ $model->caller_id = $event_new['cid_num']; break;}
+                if(preg_match('/[0-9]{6,11}/',$event_new['exten'])){ $model->caller_id = $event_new['exten']; break;}
+            }
+        }
+
+        //если нашли менеджера по звонку, значит звонок был - отвечен, если НЕ нашли, значит не отвечен(ТОЛЬКО для ИСХОДЯЩЕГО звонка)
+        if($model->call_diraction == Report::INCOMING_CALL){
+            //для входящего звонка проверим по событию ANSWER
+            if($answered_call && !empty($model->manager_call_id)){
+                $model->status_call =  Report::CALL_ANSWERED;
+            }else{
+                $model->status_call =  Report::CALL_NO_ANSWER;
+            }
         }else{
-            $model->status_call =  Report::CALL_ANSWERED;
+            if(!$answered_call){
+                $model->status_call =  Report::CALL_NO_ANSWER;
+            }else{
+                $model->status_call =  Report::CALL_ANSWERED;
+            }
         }
 
-        //unset($events);
 
         $model->chain_passed_redirects = '';
         if(!empty($redirect_list)){
             //убираем дубли при формировании списка менеджеров переадресации
-            $redirect_list = array_unique($redirect_list);
+            //$redirect_list = array_unique($redirect_list);
 
             //ищем соответствия кодам - менеджерам, что к ним подвязаны, чтобы получить"сева-катя-джамал"
             $managers = Manager::findByCodeList($redirect_list);//получаем массив соответствий менеджеров по коду
 
             if(!empty($managers)){
 
-                $managers_list = implode('-',CHtml::listData($managers, 'fio', 'fio'));
+                $managers_list = $this->arrayToString($managers, 'fio');
+
+                //$managers_list = implode('-',CHtml::listData($managers, 'fio', 'fio'));
                 /*'chain_passed_redirects' => 'Цепочка пройденных переадресаций в формате имен менеджеров "сева-катя-джамал" и пр',*/
                 $model->chain_passed_redirects = $managers_list;
             }
+
+        }
+
+        //логика проставления полей для ИСХОДЯЩЕГО ЗВОНКА
+        if($model->call_diraction == Report::INCOMING_CALL){//входящий звонок
 
         }
 
@@ -371,10 +453,8 @@ class CallPhone{
 
         //проверим статус звонка, если на него ответили - считаем дельтту если не ответили - нет смысла
         if($model->status_call==Report::CALL_ANSWERED){
-            //echo $time_last_answer.'|'.$time_connect_server.'<br>';
             //если нашли значения старта звонка и последнего поднятия трубки менеджером, считаем дельту
             if(!empty($time_connect_server) && !empty($time_last_answer)){
-                //echo 'delta='.intval(strtotime($time_last_answer)-strtotime($time_connect_server)).'<br>';
                 $model->waiting_time = intval(strtotime($time_last_answer)-strtotime($time_connect_server));
             }else{
                 $model->waiting_time = 0;
@@ -398,6 +478,16 @@ class CallPhone{
         return $model;
     }
 
+    /*
+     * преобразовываем массив(по указанному полю) в строку с разделителем-тире
+     */
+    function arrayToString($list,$index_array){
+        $new_list = array();
+        foreach($list as $j=>$row){
+            $new_list[] = $row[$index_array];
+        }
+        return implode('-', $new_list);
+    }
 
 
 }

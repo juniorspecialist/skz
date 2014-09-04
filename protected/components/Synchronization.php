@@ -59,26 +59,41 @@ class Synchronization {
 
     /*
      * СИНХРОНИЗАЦИЯ менеджеров, подвязанных к категориям(офисам)
+     * получаем список менеджеров с ФИО и кодами из БД-астерикса и обновляем ФИО в текущей системе, ФИО может меняться+могут быть новые значения
      */
     public function catalogManager(){
 
-        $codes = Manager::getCodeList();
-
+        //$codes = Manager::getCodeList();
+        /*
         if(!empty($codes)){
             $filtersCode = CHtml::listData($codes, 'code', 'code');
             $sql = 'SELECT extension,name FROM users WHERE extension NOT IN('.implode(',', $filtersCode).')';
         }else{
-            $sql = 'SELECT extension,name FROM users';
-        }
+
+        }*/
+
+        $sql = 'SELECT extension,name FROM users';
 
         $rows = YiiBase::app()->db1->createCommand($sql)->queryAll();
 
         if(!empty($rows)){
             foreach($rows as $row){
-                $model = new Manager();
-                $model->fio = $row['name'];
-                $model->code = $row['extension'];
-                $model->save();
+                //Если не нашли менеджера - создадаим, если нашли - обновим ФИО
+                $sql_find = 'SELECT * FROM {{manager}} WHERE code=:code';
+                $row_manager =  YiiBase::app()->db->createCommand($sql_find)->bindValue(':code', $row['extension'], PDO::PARAM_STR)->queryRow();
+                //не нашли менеджера - ДОБАВИМ
+                if(empty($row_manager)){
+                    $model = new Manager();
+                    $model->fio = $row['name'];
+                    $model->code = $row['extension'];
+                    $model->save();
+                }else{//нашли менеджера, обновим ФИО текущего менеджера
+                    $sql_update = 'UPDATE {{manager}} SET fio=:fio WHERE code=:code';
+                    $query_update = YiiBase::app()->db->createCommand($sql_update);
+                    $query_update->bindValue(':fio', $row['name'], PDO::PARAM_STR);
+                    $query_update->bindValue(':code', $row['extension'], PDO::PARAM_STR);
+                    $query_update->execute();
+                }
             }
         }
     }

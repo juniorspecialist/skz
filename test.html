@@ -5,138 +5,21 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 </head>
 <body>
-{{head new}}
-{{topnav new}}
-<div class="container-fluid">
-    {{header new3}}
-
-
-
-
-    <div class="row-fluid">
-        <link href="assets/css/styles.css"  rel=stylesheet  type=text/css>
-        <script type="text/javascript">
-            jQuery(document).ready(function(){
-                jQuery(document).on('click', 'li.menu', function(event){
-                    var kid_content = jQuery(event.target).find('.menu_content');
-                    //alert(kid_content.attr('id'));
-                    var id_active_menu = kid_content.attr('id');
-                    //ID  меню - это название класса ДИВА с содержимым
-                    jQuery('#tab_content').html(jQuery("."+id_active_menu).html());
-                    jQuery('li.menu').removeClass('active');
-                    jQuery(this).addClass("active");
-                });
-            });
-        </script>
-
-
-        <div id="container1" class="hidden-phone"><!-- begin #container1 -->
-            <ul>
-                <li class="menu active">
-                    <div class="sq back1"></div>
-                    <div class="text">Инженерное обслуживание зданий
-                        <div class="menu_content" id="page0"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back2"></div>
-                    <div class="text">Отопление
-                        <div class="menu_content"  id="page1"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back3"></div>
-                    <div class="text">Теплообменники
-                        <div  class="menu_content"  id="page2"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back4"></div>
-                    <div class="text">Кондиционирование
-                        <div class="menu_content" id="page3"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back5"></div>
-                    <div class="text">Вентиляция
-                        <div class="menu_content" id="page4"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back6"></div>
-                    <div class="text">Теплоносители
-                        <div class="menu_content" id="page5"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back7"></div>
-                    <div class="text">Арматура
-                        <div class="menu_content" id="page6"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back8"></div>
-                    <div class="text">Насосы
-                        <div class="menu_content" id="page7"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back19"></div>
-                    <div class="text">Радиаторы
-                        <div class="menu_content" id="page10"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back20"></div>
-                    <div class="text">Частотники
-                        <div class="menu_content" id="page11"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back9"></div>
-                    <div class="text">Водоподготовка
-                        <div class="menu_content" id="page8"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-                <li class="menu">
-                    <div class="sq back10"></div>
-                    <div class="text">Инструменты
-                        <div class="menu_content" id="page9"  style="display: none;"></div>
-                    </div>
-                    <br class="clear"></li>
-
-            </ul>
-
-        </div><!-- end #container1 -->
-        <div id="container2" class="hidden-phone"><!-- begin #container2 -->
-            <div id="wind_info">
-                <div class="line1"></div>
-
-                <div class="line2">
-                    <div id="tab_content">{{mainpage-eng2}} </div>
-                </div>
-
-                <div style="display: none;" class="page0">{{mainpage-eng2}}</div>
-                <div style="display: none;" class="page1">{{mainpage-otopl}}</div>
-                <div style="display: none;" class="page2">{{mainpage-teploobmennik}}</div>
-                <div  style="display: none;" class="page3">{{mainpage-cond}}</div>
-                <div style="display: none;" class="page4">{{mainpage-vent}}</div>
-                <div style="display: none;" class="page5">{{mainpage-teplonositel}}</div>
-                <div style="display: none;" class="page6">{{mainpage-armatura}}</div>
-                <div style="display: none;" class="page7">{{mainpage-nasos}}</div>
-                <div style="display: none;" class="page10">{{mainpage-radiator}}</div>
-                <div style="display: none;" class="page11">{{mainpage-chastotniki}}</div>
-                <div style="display: none;" class="page8">{{mainpage-voda}}</div>
-                <div style="display: none;" class="page9">{{mainpage-instrument}}</div>
-
-                <br class="clear">
-            </div>
-
-        </div><!-- end #container2 -->
-
-        {{mainpape-mobile-menu}}
-    </div></div>
-<!--/row-->
-{{footer new}}
+<div id="dialog_list_ridann">
+    <ul class="city_list_ridann">
+        <li><span class="city_dialog_ridann">Москва</span><span class="phone_dialog_ridann">8 (499) 346-80-56</span></li>
+        <li><span class="city_dialog_ridann">Воронеж</span><span class="phone_dialog_ridann">8 (473) 203-01-18</span></li>
+        <li><span class="city_dialog_ridann">Екатеринбург</span><span class="phone_dialog_ridann">8 (343) 351-72-67</span></li>
+        <li><span class="city_dialog_ridann">Калининград</span><span class="phone_dialog_ridann">8 (401) 265-80-97</span></li>
+        <li><span class="city_dialog_ridann">Новосибирск</span><span class="phone_dialog_ridann">8 (383) 207-84-51</span></li>
+        <li><span class="city_dialog_ridann">Пермь</span><span class="phone_dialog_ridann">8 (342) 299-41-67</span></li>
+        <li><span class="city_dialog_ridann">Ростов на Дону</span><span class="phone_dialog_ridann">8 (863) 209-87-99</span></li>
+        <li><span class="city_dialog_ridann">Самара</span><span class="phone_dialog_ridann">88462295754</span></li>
+        <li><span class="city_dialog_ridann">Санкт-Петербург	</span><span class="phone_dialog_ridann">8 (812) 425-56-51</span></li>
+        <li><span class="city_dialog_ridann">Уфа</span><span class="phone_dialog_ridann">83472294756</span></li>
+        <li><span class="city_dialog_ridann">Челябинск</span><span class="phone_dialog_ridann">8 (351) 200-94-39</span></li>
+        <li><span class="city_dialog_ridann"></span><span class="phone_dialog_ridann"></span></li>
+    </ul>
+</div>
 </body>
 </html>

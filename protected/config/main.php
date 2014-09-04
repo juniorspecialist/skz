@@ -11,7 +11,7 @@ return array(
 
 	// preloading 'log' component
 	'preload'=>array('log'),
-    'defaultController' => 'site/index',
+    'defaultController' => 'report/index',
 
     // язык поумолчанию
     'sourceLanguage' => 'en_US',
@@ -21,6 +21,7 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+        'application.extensions.*',
 	),
 
 	'modules'=>array(
@@ -37,6 +38,21 @@ return array(
 
 	// application components
 	'components'=>array(
+
+        // установим некоторые значения - по умолчанию
+        'widgetFactory'=>array(
+            'widgets'=>array(
+                'CLinkPager'=>array(
+                    'maxButtonCount'=>5,
+                    //'cssFile'=>false,
+                    'pageSize'=>100,
+
+                ),
+                'CJuiDatePicker'=>array(
+                    'language'=>'ru',
+                ),
+            ),
+        ),
 
         'cache'=>array(
             'class'=>'system.caching.CFileCache',
@@ -91,7 +107,7 @@ return array(
 
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
-			'errorAction'=>'site/error',
+			'errorAction'=>'report/error',
 		),
 		'log'=>array(
 			'class'=>'CLogRouter',
@@ -102,7 +118,10 @@ return array(
 				),
 				// uncomment the following to show log messages on web pages
 
-				/*array(
+
+
+                    /*
+				array(
 					'class'=>'CWebLogRoute',
 				),*/
 

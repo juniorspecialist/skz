@@ -79,8 +79,9 @@ class PhoneRegions extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+        $criteria->with = 'site';
 		$criteria->compare('id',$this->id);
+        $criteria->compare('site.id',$this->site_id);
 		$criteria->compare('phone',$this->phone,true);
 		$criteria->compare('region_id',$this->region,true);
 
