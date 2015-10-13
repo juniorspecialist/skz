@@ -10,15 +10,36 @@
  */
 class PhoneRegions extends CActiveRecord
 {
+
+    public $countrec;
+
+    public $report_count;
+
+
+
+    public $siteArray;
+    public $regionArray;
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return '{{phone_regions}}';
+		return '{{phone_regions_site}}';
 	}
 
-	/**
+
+    public function getSiteArray()
+    {
+        if ($this->siteArray===null)
+            $this->categories_array=CHtml::listData($this->categories, 'id', 'id');
+        return $this->categories_array;
+    }
+
+    public function setSiteArray($value)
+    {
+        $this->siteArray[]=$value;
+    }
+    /**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -26,15 +47,25 @@ class PhoneRegions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('phone, region_id, site_id', 'required'),
-			array('phone', 'length', 'max'=>60),
-            array('region_id, site_id', 'numerical', 'integerOnly'=>true),
+			array('phone, region, site', 'required'),
+            array('siteArray,regionArray','safe'),
+			array('phone, site', 'length', 'max'=>60),
+            array('region,report_count', 'length', 'max'=>255),
+            //array('region, site', 'numerical', 'integerOnly'=>true),
 			//array('region', 'length', 'max'=>80),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, phone, region_id, site_id', 'safe', 'on'=>'search'),
+			array('id, phone, region, site,report_count', 'safe', 'on'=>'search'),
 		);
 	}
+
+    public function getCityList(){
+        return YiiBase::app()->db->createCommand('SELECT distinct(region) FROM {{phone_regions_site}}')->queryAll();
+    }
+
+    public function getSiteList(){
+        return YiiBase::app()->db->createCommand('SELECT distinct(site) FROM {{phone_regions_site}}')->queryAll();
+    }
 
 	/**
 	 * @return array relational rules.
@@ -44,8 +75,10 @@ class PhoneRegions extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-            'region' => array(self::BELONGS_TO, 'Region', 'region_id'),
-            'site' => array(self::BELONGS_TO, 'Site', 'site_id'),
+            //'region' => array(self::BELONGS_TO, 'Region', 'region_id'),
+            //'site' => array(self::BELONGS_TO, 'Site', 'site_id'),
+            //report.caller_id = phoneregions.phone
+           // 'phoneCount'=>array(self::STAT, 'Report', 'caller_id', 'select' => 'count( DISTINCT (caller_id) )'),
 		);
 	}
 
@@ -57,8 +90,11 @@ class PhoneRegions extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'phone' => 'Телефон',
-			'region_id' => 'Регион,название направления для звонка',
-            'site_id'=>'Сайт',
+			'region' => 'Регион,название направления для звонка',
+            'site'=>'Сайт',
+            'report_count'=>'Счётчик звонков',
+            'siteArray'=>'Список сайтов',
+            'regionArray'=>'Список городов',
 		);
 	}
 
@@ -81,14 +117,23 @@ class PhoneRegions extends CActiveRecord
 		$criteria=new CDbCriteria;
         $criteria->with = 'site';
 		$criteria->compare('id',$this->id);
-        $criteria->compare('site.id',$this->site_id);
+        $criteria->compare('site',$this->site);
 		$criteria->compare('phone',$this->phone,true);
-		$criteria->compare('region_id',$this->region,true);
+		$criteria->compare('region',$this->region,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+
+    /*
+     * получаем список сайтов для фильтрации в общей таблице отчётов
+     */
+    public static function siteList(){
+        $sql = 'SELECT DISTINCT(site) as site FROM {{phone_regions_site}}';
+        $rows = YiiBase::app()->db->createCommand($sql)->queryAll();
+        return $rows;
+    }
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -101,36 +146,17 @@ class PhoneRegions extends CActiveRecord
 		return parent::model($className);
 	}
 
-    /*
-     * ищим по номеру ДИД-номер, есть ли он в базе
-     */
-    static function findPhoneByNumber($phone){
-        $sql = 'SELECT id FROM {{phone_regions}} WHERE phone=:phone';
-        $query = YiiBase::app()->db->createCommand($sql);
-        $query->bindParam(':phone', $phone, PDO::PARAM_STR);
-        $row = $query->queryRow();
 
-        return $row['id'];
-    }
-
-    /*
-     * получаем список всех номеров(DID)
-     */
-    static function getPhonesList(){
-        $sql = 'SELECT phone FROM {{phone_regions}}';
-        $query = YiiBase::app()->db->createCommand($sql)->queryAll();
-        return $query;
-    }
 
     /*
      * определяем сайт Входящего звонка по его ДИД
      * $did - номер, на который звонит клиент
      */
-    static function getSiteByDid($did){
+    static function getInfoByDid($did){
 
-        $sql = 'SELECT * FROM {{phone_regions}} WHERE phone=:phone';
+        $sql = 'SELECT * FROM {{phone_regions_site}} WHERE phone=:phone';
 
-        $query = YiiBase::app()->db->cache(1000)->createCommand($sql);
+        $query = YiiBase::app()->db->createCommand($sql);
 
         $query->bindValue(':phone', $did, PDO::PARAM_STR);
 

@@ -1,84 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="aaee5587-0727-40b2-9b3a-1177b3a3236d" name="Default" comment="Merge remote-tracking branch 'origin/master'&#10;&#10;Conflicts:&#10;&#9;protected/config/main.php&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/protected/components/GridView.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/protected/config/cron.php" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/code.csv" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/ApiCallTouche.php" afterPath="$PROJECT_DIR$/protected/components/ApiCallTouche.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/CSV.php" afterPath="$PROJECT_DIR$/protected/components/CSV.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/CallCityFilter.php" afterPath="$PROJECT_DIR$/protected/components/CallCityFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/CallCityFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/CallCityFilter.php" />
+    <list default="true" id="aaee5587-0727-40b2-9b3a-1177b3a3236d" name="Default" comment="update project&#10;">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/ajax-loader.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/ajax-loader.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/bg.gif" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/bg.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/blank.gif" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/blank.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/rating/delete.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/rating/delete.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/delete.png" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/delete.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/down.gif" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/down.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/listview/down.gif" afterPath="$PROJECT_DIR$/assets/bbb89b6a/listview/down.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_close.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_close.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_loading.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_loading.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_nav_left.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_nav_left.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_nav_right.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_nav_right.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_e.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_e.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_n.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_n.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_ne.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_ne.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_nw.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_nw.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_s.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_s.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_se.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_se.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_sw.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_sw.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_w.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_shadow_w.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_left.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_left.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_main.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_main.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_over.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_over.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_right.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancy_title_right.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancybox-x.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancybox-x.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancybox-y.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancybox-y.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancybox.png" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/fancybox.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/file.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/file.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/folder-closed.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/folder-closed.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/folder.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/folder.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/autocomplete/indicator.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/autocomplete/indicator.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/loading.gif" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/loading.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/listview/loading.gif" afterPath="$PROJECT_DIR$/assets/bbb89b6a/listview/loading.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/images/logo.png" afterPath="$PROJECT_DIR$/assets/b66f14de/images/logo.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/minus.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/minus.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/plus.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/plus.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/rating/star.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/rating/star.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-black-line.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-black-line.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-black.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-black.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-default-line.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-default-line.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-default.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-default.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-famfamfam-line.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-famfamfam-line.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-famfamfam.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-famfamfam.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-gray-line.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-gray-line.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-gray.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-gray.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-red-line.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-red-line.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-red.gif" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/images/treeview-red.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_flat_0_aaaaaa_40x100.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_flat_0_aaaaaa_40x100.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_flat_75_ffffff_40x100.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_flat_75_ffffff_40x100.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_55_fbf9ee_1x400.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_55_fbf9ee_1x400.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_65_ffffff_1x400.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_65_ffffff_1x400.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_75_dadada_1x400.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_75_dadada_1x400.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_75_e6e6e6_1x400.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_75_e6e6e6_1x400.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_95_fef1ec_1x400.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_glass_95_fef1ec_1x400.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_222222_256x240.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_222222_256x240.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_2e83ff_256x240.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_2e83ff_256x240.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_454545_256x240.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_454545_256x240.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_888888_256x240.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_888888_256x240.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_cd0a0a_256x240.png" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/images/ui-icons_cd0a0a_256x240.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/up.gif" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/up.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/listview/up.gif" afterPath="$PROJECT_DIR$/assets/bbb89b6a/listview/up.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/update.png" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/update.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/view.png" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/view.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/CallPhone.php" afterPath="$PROJECT_DIR$/protected/components/CallPhone.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/CallerIdFilter.php" afterPath="$PROJECT_DIR$/protected/components/CallerIdFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/CallerIdFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/CallerIdFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/City.php" afterPath="$PROJECT_DIR$/protected/models/City.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/ContactForm.php" afterPath="$PROJECT_DIR$/protected/models/ContactForm.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/Controller.php" afterPath="$PROJECT_DIR$/protected/components/Controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/CountRedirectFilter.php" afterPath="$PROJECT_DIR$/protected/components/CountRedirectFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/CountRedirectFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/CountRedirectFilter.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/commands/CronCommand.php" afterPath="$PROJECT_DIR$/protected/commands/CronCommand.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/DateCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/DateCallFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/DateCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/DateCallFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/DestFilter.php" afterPath="$PROJECT_DIR$/protected/components/DestFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/DestFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/DestFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/DidFilter.php" afterPath="$PROJECT_DIR$/protected/components/DidFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/DidFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/DidFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/DurationCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/DurationCallFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/DurationCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/DurationCallFilter.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/runtime/gii-1.1.14/CrudCode.php" afterPath="$PROJECT_DIR$/protected/runtime/gii-1.1.14/CrudCode.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/GridView.php" afterPath="$PROJECT_DIR$/protected/components/GridView.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/LoginForm.php" afterPath="$PROJECT_DIR$/protected/models/LoginForm.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/Manager.php" afterPath="$PROJECT_DIR$/protected/models/Manager.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/OfficeManager.php" afterPath="$PROJECT_DIR$/protected/models/OfficeManager.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/runtime/gii-1.1.14/ModelCode.php" afterPath="$PROJECT_DIR$/protected/runtime/gii-1.1.14/ModelCode.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/controllers/OfficeManagerController.php" afterPath="$PROJECT_DIR$/protected/controllers/OfficeManagerController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/PhoneRegions.php" afterPath="$PROJECT_DIR$/protected/models/PhoneRegions.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/RedirectFilter.php" afterPath="$PROJECT_DIR$/protected/components/RedirectFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/RedirectFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/RedirectFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/RelationOfficeManager.php" afterPath="$PROJECT_DIR$/protected/models/RelationOfficeManager.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/Report.php" afterPath="$PROJECT_DIR$/protected/models/Report.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/controllers/ReportController.php" afterPath="$PROJECT_DIR$/protected/controllers/ReportController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/Site.php" afterPath="$PROJECT_DIR$/protected/models/Site.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/controllers/SiteController.php" afterPath="$PROJECT_DIR$/protected/controllers/SiteController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/models/SitePhone.php" afterPath="$PROJECT_DIR$/protected/models/SitePhone.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/Synchronization.php" afterPath="$PROJECT_DIR$/protected/components/Synchronization.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/TimeEndCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/TimeEndCallFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/TimeEndCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/TimeEndCallFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/TimeStartCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/TimeStartCallFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/TimeStartCallFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/TimeStartCallFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/TimeWaitFilter.php" afterPath="$PROJECT_DIR$/protected/components/TimeWaitFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/TimeWaitFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/TimeWaitFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/UniqueidFilter.php" afterPath="$PROJECT_DIR$/protected/components/UniqueidFilter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/UniqueidFilter.php" afterPath="$PROJECT_DIR$/protected/components/views/UniqueidFilter.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/UserIdentity.php" afterPath="$PROJECT_DIR$/protected/components/UserIdentity.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/_form.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/_form.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/_managers.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/_managers.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/_search.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/_search.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/_view.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/_view.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/site/pages/about.php" afterPath="$PROJECT_DIR$/protected/views/site/pages/about.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/admin.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/admin.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/layouts/column1.php" afterPath="$PROJECT_DIR$/protected/views/layouts/column1.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/layouts/column2.php" afterPath="$PROJECT_DIR$/protected/views/layouts/column2.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/report/contact.php" afterPath="$PROJECT_DIR$/protected/views/report/contact.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/create.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/create.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/report/error.php" afterPath="$PROJECT_DIR$/protected/views/report/error.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index-test.php" afterPath="$PROJECT_DIR$/index-test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/index.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/report/index.php" afterPath="$PROJECT_DIR$/protected/views/report/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/site/index.php" afterPath="$PROJECT_DIR$/protected/views/site/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/report/login.php" afterPath="$PROJECT_DIR$/protected/views/report/login.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/runtime/application.log" afterPath="$PROJECT_DIR$/protected/runtime/application.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/config/cron.php" afterPath="$PROJECT_DIR$/protected/config/cron.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/css/ie.css" afterPath="$PROJECT_DIR$/assets/b66f14de/css/ie.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/js/jquery-ui-i18n.min.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/js/jquery-ui-i18n.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery-ui.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery-ui.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/js/jquery-ui.min.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/js/jquery-ui.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.ajaxqueue.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.ajaxqueue.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/autocomplete/jquery.autocomplete.css" afterPath="$PROJECT_DIR$/assets/5662caa8/autocomplete/jquery.autocomplete.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.autocomplete.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.autocomplete.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.ba-bbq.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.ba-bbq.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.ba-bbq.min.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.ba-bbq.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.bgiframe.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.bgiframe.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.cookie.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.cookie.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/jquery.fancybox-1.3.1.css" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/jquery.fancybox-1.3.1.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/jquery.fancybox-1.3.1.pack.js" afterPath="$PROJECT_DIR$/assets/b66f14de/js/fancybox/jquery.fancybox-1.3.1.pack.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.history.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.history.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.maskedinput.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.maskedinput.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.maskedinput.min.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.maskedinput.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.metadata.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.metadata.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.min.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.multifile.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.multifile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/rating/jquery.rating.css" afterPath="$PROJECT_DIR$/assets/5662caa8/rating/jquery.rating.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.rating.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.rating.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.treeview.async.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.treeview.async.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/treeview/jquery.treeview.css" afterPath="$PROJECT_DIR$/assets/5662caa8/treeview/jquery.treeview.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.treeview.edit.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.treeview.edit.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.treeview.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.treeview.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.accordion.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.accordion.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.autocomplete.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.autocomplete.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.button.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.button.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.core.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.core.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.datepicker.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.datepicker.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.dialog.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.dialog.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.menu.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.menu.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.progressbar.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.progressbar.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.resizable.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.resizable.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.selectable.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.selectable.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.slider.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.slider.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.spinner.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.spinner.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.tabs.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.tabs.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.theme.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.theme.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.tooltip.css" afterPath="$PROJECT_DIR$/assets/5662caa8/jui/css/base/jquery.ui.tooltip.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.yii.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.yii.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.yiiactiveform.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.yiiactiveform.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/jquery.yiigridview.js" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/jquery.yiigridview.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/listview/jquery.yiilistview.js" afterPath="$PROJECT_DIR$/assets/bbb89b6a/listview/jquery.yiilistview.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/yiitab/jquery.yiitab.css" afterPath="$PROJECT_DIR$/assets/5662caa8/yiitab/jquery.yiitab.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/jquery.yiitab.js" afterPath="$PROJECT_DIR$/assets/5662caa8/jquery.yiitab.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/css/main.css" afterPath="$PROJECT_DIR$/assets/b66f14de/css/main.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/main.js" afterPath="$PROJECT_DIR$/assets/b66f14de/js/main.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/config/main.php" afterPath="$PROJECT_DIR$/protected/config/main.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/layouts/main.php" afterPath="$PROJECT_DIR$/protected/views/layouts/main.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/components/views/regfilter.php" afterPath="$PROJECT_DIR$/protected/components/views/regfilter.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/f1b2c07e/pager.css" afterPath="$PROJECT_DIR$/assets/f1b2c07e/pager.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/css/print.css" afterPath="$PROJECT_DIR$/assets/b66f14de/css/print.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/punycode.js" afterPath="$PROJECT_DIR$/assets/5662caa8/punycode.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/5662caa8/punycode.min.js" afterPath="$PROJECT_DIR$/assets/5662caa8/punycode.min.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/report/report.php" afterPath="$PROJECT_DIR$/protected/views/report/report.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sypex_phone.php" afterPath="$PROJECT_DIR$/sypex_phone.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.html" afterPath="$PROJECT_DIR$/test.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/update.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/update.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/protected/views/officeManager/view.php" afterPath="$PROJECT_DIR$/protected/views/officeManager/view.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/css/screen.css" afterPath="$PROJECT_DIR$/assets/b66f14de/css/screen.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/screen.css" afterPath="$PROJECT_DIR$/css/screen.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/detailview/styles.css" afterPath="$PROJECT_DIR$/assets/bbb89b6a/detailview/styles.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/gridview/styles.css" afterPath="$PROJECT_DIR$/assets/bbb89b6a/gridview/styles.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/bbb89b6a/listview/styles.css" afterPath="$PROJECT_DIR$/assets/bbb89b6a/listview/styles.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/b66f14de/js/tooltip.js" afterPath="$PROJECT_DIR$/assets/b66f14de/js/tooltip.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="372097ea-fa9b-42b3-b5a0-d51ddb69eded" name="New changelist" comment="" />
     <ignored path="skz.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path="$PROJECT_DIR$/../framework/cli/" />
+    <ignored path="$PROJECT_DIR$/../framework/messages/" />
+    <ignored path="$PROJECT_DIR$/../framework/views/" />
+    <ignored path="$PROJECT_DIR$/assets/" />
+    <ignored path="$PROJECT_DIR$/protected/runtime/" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <ignored path="assets/" />
+    <ignored path="protected/runtime/" />
+    <ignored path="../framework/" />
+    <ignored path="protected/config/main.php" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,52 +177,58 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="report.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="report.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/protected/views/report/report.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="40" selection-start="866" selection-end="866" vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="2745">
+            <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="2670">
+              <caret line="30" column="40" selection-start-line="30" selection-start-column="40" selection-end-line="30" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GridView.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="GridView.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/protected/components/GridView.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="58" selection-start="1133" selection-end="1133" vertical-scroll-proportion="0.0" vertical-offset="555" max-vertical-offset="1005">
+            <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="930">
+              <caret line="37" column="58" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Report.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Report.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/protected/models/Report.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="32" selection-start="1202" selection-end="1202" vertical-scroll-proportion="0.47613764" vertical-offset="156" max-vertical-offset="8910">
+            <state vertical-scroll-proportion="0.44186047" vertical-offset="426" max-vertical-offset="8910">
+              <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
               <folding>
-                <marker date="1409667806090" expanded="true" signature="14609:14640" placeholder="SELECT linke..tbl_report..." />
-                <marker date="1409667806090" expanded="true" signature="14678:14709" placeholder="SELECT linke..tbl_report..." />
-                <marker date="1409667806090" expanded="true" signature="21875:21993" placeholder="UPDATE tbl_r..." />
-                <marker date="1409667806090" expanded="true" signature="22533:22678" placeholder="UPDATE tbl_r..." />
-                <marker date="1409667806090" expanded="true" signature="23280:23318" placeholder="DELETE FROM ..." />
+                <marker date="1444739865202" expanded="true" signature="14609:14640" placeholder="SELECT linke..tbl_report..." />
+                <marker date="1444739865202" expanded="true" signature="14678:14709" placeholder="SELECT linke..tbl_report..." />
+                <marker date="1444739865202" expanded="true" signature="21300:21432" placeholder="SELECT linke..tbl_call_back..." />
+                <marker date="1444739865202" expanded="true" signature="21875:21993" placeholder="UPDATE tbl_r..." />
+                <marker date="1444739865202" expanded="true" signature="22533:22678" placeholder="UPDATE tbl_r..." />
+                <marker date="1444739865202" expanded="true" signature="23280:23318" placeholder="DELETE FROM ..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ReportController.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="ReportController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/protected/controllers/ReportController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="21" selection-start="325" selection-end="325" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="5610">
+            <state vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="5535">
+              <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SiteController.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="SiteController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/protected/controllers/SiteController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="51" selection-start="1110" selection-end="1110" vertical-scroll-proportion="0.0" vertical-offset="630" max-vertical-offset="2820">
+            <state vertical-scroll-proportion="0.0" vertical-offset="630" max-vertical-offset="2820">
+              <caret line="38" column="51" selection-start-line="38" selection-start-column="51" selection-end-line="38" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -157,73 +242,18 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
-    <option name="SYNC_SETTING" value="DONT" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="AUTO_COMMIT_ON_CHERRY_PICK" value="true" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="changedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/protected/components/views/TimeStartCallFilter.php" />
-        <option value="$PROJECT_DIR$/protected/components/views/DurationCallFilter.php" />
-        <option value="$PROJECT_DIR$/protected/components/views/DestFilter.php" />
-        <option value="$PROJECT_DIR$/protected/models/Region.php" />
-        <option value="$PROJECT_DIR$/reg.php" />
-        <option value="$PROJECT_DIR$/protected/views/site/report.php" />
-        <option value="$PROJECT_DIR$/protected/views/site/create.php" />
-        <option value="$PROJECT_DIR$/protected/views/site/update.php" />
-        <option value="$PROJECT_DIR$/protected/controllers/SiteController.php" />
-        <option value="$PROJECT_DIR$/protected/components/TimeWaitFilter.php" />
-        <option value="$PROJECT_DIR$/protected/components/views/TimeWaitFilter.php" />
-        <option value="$PROJECT_DIR$/protected/components/CountRedirectFilter.php" />
-        <option value="$PROJECT_DIR$/protected/components/views/CountRedirectFilter.php" />
-        <option value="$PROJECT_DIR$/protected/controllers/PhoneRegionsController.php" />
-        <option value="$PROJECT_DIR$/protected/views/phoneRegions/update.php" />
-        <option value="$PROJECT_DIR$/protected/views/phoneRegions/create.php" />
-        <option value="$PROJECT_DIR$/protected/views/phoneRegions/_form.php" />
-        <option value="$PROJECT_DIR$/protected/controllers/RegionController.php" />
-        <option value="$PROJECT_DIR$/protected/views/region/create.php" />
-        <option value="$PROJECT_DIR$/protected/views/region/admin.php" />
-        <option value="$PROJECT_DIR$/protected/views/region/_form.php" />
-        <option value="$PROJECT_DIR$/protected/views/region/update.php" />
-        <option value="$PROJECT_DIR$/protected/components/CSV.php" />
-        <option value="$PROJECT_DIR$/audio.html" />
-        <option value="$PROJECT_DIR$/index-test.php" />
-        <option value="$PROJECT_DIR$/protected/models/OfficeManager.php" />
-        <option value="$PROJECT_DIR$/protected/models/Manager.php" />
-        <option value="$PROJECT_DIR$/test.html" />
-        <option value="$PROJECT_DIR$/geo_city_ridann.js" />
-        <option value="$PROJECT_DIR$/plastgroup_replace.php" />
-        <option value="$PROJECT_DIR$/protected/config/main.php" />
-        <option value="$PROJECT_DIR$/reboot_theservice.php" />
-        <option value="$PROJECT_DIR$/protected/models/CallBack.php" />
-        <option value="$PROJECT_DIR$/protected/components/Synchronization.php" />
-        <option value="$PROJECT_DIR$/../test.theservice/manager/includes/document.parser.class.inc.php" />
-        <option value="$PROJECT_DIR$/protected/config/cron.php" />
-        <option value="$USER_HOME$/Рабочий стол/cron.php" />
-        <option value="$PROJECT_DIR$/protected/components/CallPhone.php" />
-        <option value="$PROJECT_DIR$/protected/views/phoneRegions/admin.php" />
-        <option value="$PROJECT_DIR$/protected/models/PhoneRegions.php" />
-        <option value="$PROJECT_DIR$/protected/views/site/_form.php" />
-        <option value="$PROJECT_DIR$/protected/views/site/admin.php" />
-        <option value="$PROJECT_DIR$/protected/models/Site.php" />
-        <option value="$PROJECT_DIR$/protected/commands/CronCommand.php" />
-        <option value="$PROJECT_DIR$/protected/models/Callback.php" />
-        <option value="$PROJECT_DIR$/protected/views/layouts/main.php" />
-        <option value="$PROJECT_DIR$/index.php" />
-        <option value="$PROJECT_DIR$/protected/models/Report.php" />
-        <option value="$PROJECT_DIR$/protected/components/GridView.php" />
-        <option value="$PROJECT_DIR$/protected/views/report/report.php" />
-        <option value="$PROJECT_DIR$/protected/controllers/ReportController.php" />
-      </list>
-    </option>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
     <option name="x" value="65" />
-    <option name="y" value="24" />
+    <option name="y" value="-4" />
     <option name="width" value="1855" />
-    <option name="height" value="1056" />
+    <option name="height" value="1084" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -239,7 +269,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -251,7 +281,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -418,12 +447,13 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Рабочий стол/cron.php" />
-    <property name="options.lastSelected" value="vcs.Git" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/protected/config/main.php" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Ignored.Files" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -441,7 +471,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
       <method />
     </configuration>
     <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
@@ -457,63 +487,57 @@
     <list size="0" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
-  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
-    <option name="USER" value="" />
-    <option name="PASSWORD" value="" />
-    <option name="mySSHConnectionTimeout" value="30000" />
-    <option name="mySSHReadTimeout" value="30000" />
-    <option name="LAST_MERGED_REVISION" />
-    <option name="MERGE_DRY_RUN" value="false" />
-    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
-    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
-    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
-    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
-    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
-    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
-    <option name="FORCE_UPDATE" value="false" />
-    <option name="IGNORE_EXTERNALS" value="false" />
-    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  <component name="SvnConfiguration" myUseAcceleration="nothing">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="aaee5587-0727-40b2-9b3a-1177b3a3236d" name="Default" comment="" />
       <changelist id="372097ea-fa9b-42b3-b5a0-d51ddb69eded" name="New changelist" comment="" />
       <created>1401695134495</created>
+      <option name="number" value="Default" />
       <updated>1401695134495</updated>
     </task>
     <task id="LOCAL-00001" summary="Initial commit&#10;убраны дубли звонков, определение города по ДИДу исправлено, чаще стало определятся офис звонка, выборка звонков за интервал времени">
       <created>1404741050416</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
       <updated>1404741050416</updated>
     </task>
     <task id="LOCAL-00002" summary="Initial commit&#10;убраны дубли звонков, определение города по ДИДу исправлено, чаще стало определятся офис звонка, выборка звонков за интервал времени">
       <created>1404741132981</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
       <updated>1404741132981</updated>
     </task>
     <task id="LOCAL-00003" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;Conflicts:&#10;&#9;protected/config/main.php&#10;">
       <created>1404742535221</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
       <updated>1404742535221</updated>
     </task>
     <task id="LOCAL-00004" summary="Merge remote-tracking branch 'origin/master'&#10;&#10;Conflicts:&#10;&#9;protected/config/main.php&#10;">
       <created>1405001147992</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
       <updated>1405001147992</updated>
     </task>
     <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917964" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19856592" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20297849" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32894737" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917964" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Framework" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -521,13 +545,18 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
       <collection />
     </option>
   </component>
@@ -573,11 +602,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/protected/models/Report.php</url>
-          <line>52</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/protected/models/Report.php</url>
           <line>576</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
@@ -593,287 +617,363 @@
       </breakpoints>
       <option name="time" value="49" />
     </breakpoint-manager>
+    <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/protected/components/views/DurationCallFilter.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="0" selection-start="89" selection-end="2413" vertical-scroll-proportion="0.049234137" vertical-offset="0" max-vertical-offset="1470" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/components/TimeWaitFilter.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="0" selection-start="124" selection-end="213" vertical-scroll-proportion="0.065645516" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/components/CountRedirectFilter.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="36" selection-start="191" selection-end="191" vertical-scroll-proportion="0.082056895" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/components/views/TimeWaitFilter.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="0" selection-start="88" selection-end="2194" vertical-scroll-proportion="0.1388889" vertical-offset="0" max-vertical-offset="1545" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/components/views/CountRedirectFilter.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="8" selection-start="161" selection-end="161" vertical-scroll-proportion="0.19675925" vertical-offset="25" max-vertical-offset="1545" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/phoneRegions/update.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="4" selection-start="494" selection-end="522" vertical-scroll-proportion="0.29540482" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/phoneRegions/create.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="12" selection-start="315" selection-end="315" vertical-scroll-proportion="0.24617068" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/region/admin.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="38" selection-start="1153" selection-end="1153" vertical-scroll-proportion="0.8744395" vertical-offset="0" max-vertical-offset="930" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/phoneRegions/_form.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="21" selection-start="891" selection-end="891" vertical-scroll-proportion="0.44310722" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/region/_form.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="84" selection-start="963" selection-end="963" vertical-scroll-proportion="0.4595186" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/region/update.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="34" selection-start="482" selection-end="482" vertical-scroll-proportion="0.29540482" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/region/create.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="4" selection-start="277" selection-end="304" vertical-scroll-proportion="0.24617068" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/controllers/PhoneRegionsController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="130" column="27" selection-start="3258" selection-end="3258" vertical-scroll-proportion="0.50875276" vertical-offset="1485" max-vertical-offset="2835" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/controllers/RegionController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="56" selection-start="3114" selection-end="3114" vertical-scroll-proportion="0.0" vertical-offset="1875" max-vertical-offset="2820" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index-test.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="42" selection-start="1120" selection-end="1120" vertical-scroll-proportion="0.3665208" vertical-offset="145" max-vertical-offset="1080" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="6" selection-start="1724" selection-end="1724" vertical-scroll-proportion="-13.75" vertical-offset="0" max-vertical-offset="450" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="188" column="4" selection-start="2142" selection-end="2163" vertical-scroll-proportion="0.36582693" vertical-offset="2486" max-vertical-offset="3585" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/form.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="72" selection-start="783" selection-end="785" vertical-scroll-proportion="0.33296824" vertical-offset="41" max-vertical-offset="2550" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/components/CSV.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="24" selection-start="463" selection-end="468" vertical-scroll-proportion="0.27899343" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/config/console.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="630" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/reboot_theservice.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="1" selection-start="905" selection-end="905" vertical-scroll-proportion="0.3938731" vertical-offset="0" max-vertical-offset="914" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.htaccess">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/RelationOfficeManager.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1845">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/City.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2355" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/Manager.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="6" selection-start="363" selection-end="363" vertical-scroll-proportion="0.22411953" vertical-offset="0" max-vertical-offset="2400" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/OfficeManager.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="57" selection-start="1295" selection-end="1295" vertical-scroll-proportion="0.7524013" vertical-offset="0" max-vertical-offset="2595" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/Region.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="12" selection-start="195" selection-end="201" vertical-scroll-proportion="0.14407684" vertical-offset="0" max-vertical-offset="1500" />
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/standard_8.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="794" column="9" selection-start="25503" selection-end="25503" vertical-scroll-proportion="0.34151548" vertical-offset="11590" max-vertical-offset="16530" />
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/iconv.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="9" selection-start="1931" selection-end="1931" vertical-scroll-proportion="0.34151548" vertical-offset="595" max-vertical-offset="6750" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/components/Synchronization.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="65" selection-start="3159" selection-end="3159" vertical-scroll-proportion="-0.008537887" vertical-offset="1313" max-vertical-offset="2250">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/config/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="21" selection-start="2339" selection-end="2339" vertical-scroll-proportion="1.4087514" vertical-offset="0" max-vertical-offset="2145" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../test.theservice/manager/includes/document.parser.class.inc.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="865" column="23" selection-start="35533" selection-end="35533" vertical-scroll-proportion="0.7848384" vertical-offset="12271" max-vertical-offset="46575" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/site/_form.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="45" selection-start="1032" selection-end="1032" vertical-scroll-proportion="0.48025614" vertical-offset="0" max-vertical-offset="937" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/site/admin.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="16" selection-start="1034" selection-end="1034" vertical-scroll-proportion="0.791889" vertical-offset="8" max-vertical-offset="945" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/PhoneRegions.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="51" selection-start="2429" selection-end="2429" vertical-scroll-proportion="0.78441834" vertical-offset="510" max-vertical-offset="2175" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/phoneRegions/admin.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="64" selection-start="1447" selection-end="1447" vertical-scroll-proportion="0.83351123" vertical-offset="119" max-vertical-offset="1095" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/Site.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="54" selection-start="3739" selection-end="3739" vertical-scroll-proportion="0.77588046" vertical-offset="1268" max-vertical-offset="2205" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/views/layouts/main.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="31" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.279476" vertical-offset="74" max-vertical-offset="1035" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/models/Callback.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="122" column="42" selection-start="3833" selection-end="3833" vertical-scroll-proportion="0.2816594" vertical-offset="1572" max-vertical-offset="3135" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/commands/CronCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="45" selection-start="2052" selection-end="2071" vertical-scroll-proportion="0.83515286" vertical-offset="0" max-vertical-offset="916" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/components/CallPhone.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="252" column="0" selection-start="9147" selection-end="9147" vertical-scroll-proportion="0.2128821" vertical-offset="3510" max-vertical-offset="7395">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="2" selection-start="558" selection-end="558" vertical-scroll-proportion="0.32751092" vertical-offset="0" max-vertical-offset="916" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/config/cron.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="0" selection-start="1280" selection-end="1280" vertical-scroll-proportion="0.024017468" vertical-offset="578" max-vertical-offset="1515" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../framework/zii/widgets/grid/CGridColumn.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3075" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../framework/zii/widgets/grid/CGridView.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="30" selection-start="3535" selection-end="3535" vertical-scroll-proportion="-5.106987" vertical-offset="5803" max-vertical-offset="9720" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../framework/zii/widgets/CBaseListView.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="237" column="24" selection-start="6621" selection-end="7774" vertical-scroll-proportion="0.8143982" vertical-offset="2726" max-vertical-offset="4380">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/controllers/SiteController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="51" selection-start="1110" selection-end="1110" vertical-scroll-proportion="0.0" vertical-offset="630" max-vertical-offset="2820">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/protected/views/report/report.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="40" selection-start="866" selection-end="866" vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="2745">
+        <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="2670">
+          <caret line="30" column="40" selection-start-line="30" selection-start-column="40" selection-end-line="30" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/protected/components/GridView.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="58" selection-start="1133" selection-end="1133" vertical-scroll-proportion="0.0" vertical-offset="555" max-vertical-offset="1005">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/protected/controllers/ReportController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="21" selection-start="325" selection-end="325" vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="5610">
+        <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="930">
+          <caret line="37" column="58" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/protected/models/Report.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="32" selection-start="1202" selection-end="1202" vertical-scroll-proportion="0.47613764" vertical-offset="156" max-vertical-offset="8910">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8910">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1409667806090" expanded="true" signature="14609:14640" placeholder="SELECT linke..tbl_report..." />
-            <marker date="1409667806090" expanded="true" signature="14678:14709" placeholder="SELECT linke..tbl_report..." />
-            <marker date="1409667806090" expanded="true" signature="21875:21993" placeholder="UPDATE tbl_r..." />
-            <marker date="1409667806090" expanded="true" signature="22533:22678" placeholder="UPDATE tbl_r..." />
-            <marker date="1409667806090" expanded="true" signature="23280:23318" placeholder="DELETE FROM ..." />
+            <marker date="1444739865202" expanded="true" signature="14609:14640" placeholder="SELECT linke..tbl_report..." />
+            <marker date="1444739865202" expanded="true" signature="14678:14709" placeholder="SELECT linke..tbl_report..." />
+            <marker date="1444739865202" expanded="true" signature="21300:21432" placeholder="SELECT linke..tbl_call_back..." />
+            <marker date="1444739865202" expanded="true" signature="21875:21993" placeholder="UPDATE tbl_r..." />
+            <marker date="1444739865202" expanded="true" signature="22533:22678" placeholder="UPDATE tbl_r..." />
+            <marker date="1444739865202" expanded="true" signature="23280:23318" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/controllers/ReportController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="5535">
+          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/controllers/SiteController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="630" max-vertical-offset="2820">
+          <caret line="38" column="51" selection-start-line="38" selection-start-column="51" selection-end-line="38" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/views/report/report.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="2670">
+          <caret line="30" column="40" selection-start-line="30" selection-start-column="40" selection-end-line="30" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/GridView.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="930">
+          <caret line="37" column="58" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/Report.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8910">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1444739865202" expanded="true" signature="14609:14640" placeholder="SELECT linke..tbl_report..." />
+            <marker date="1444739865202" expanded="true" signature="14678:14709" placeholder="SELECT linke..tbl_report..." />
+            <marker date="1444739865202" expanded="true" signature="21300:21432" placeholder="SELECT linke..tbl_call_back..." />
+            <marker date="1444739865202" expanded="true" signature="21875:21993" placeholder="UPDATE tbl_r..." />
+            <marker date="1444739865202" expanded="true" signature="22533:22678" placeholder="UPDATE tbl_r..." />
+            <marker date="1444739865202" expanded="true" signature="23280:23318" placeholder="DELETE FROM ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/controllers/ReportController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="5535">
+          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/controllers/SiteController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="630" max-vertical-offset="2820">
+          <caret line="38" column="51" selection-start-line="38" selection-start-column="51" selection-end-line="38" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/views/DurationCallFilter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.049234137" vertical-offset="0" max-vertical-offset="1470">
+          <caret line="8" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/TimeWaitFilter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.065645516" vertical-offset="0" max-vertical-offset="914">
+          <caret line="9" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/CountRedirectFilter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.082056895" vertical-offset="0" max-vertical-offset="914">
+          <caret line="10" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/views/TimeWaitFilter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.1388889" vertical-offset="0" max-vertical-offset="1545">
+          <caret line="8" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/views/CountRedirectFilter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19675925" vertical-offset="25" max-vertical-offset="1545">
+          <caret line="13" column="8" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index-test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3665208" vertical-offset="145" max-vertical-offset="1080">
+          <caret line="32" column="42" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.75" vertical-offset="0" max-vertical-offset="450">
+          <caret line="22" column="6" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36582693" vertical-offset="2486" max-vertical-offset="3585">
+          <caret line="188" column="4" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/form.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33296824" vertical-offset="41" max-vertical-offset="2550">
+          <caret line="23" column="72" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/CSV.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27899343" vertical-offset="0" max-vertical-offset="914">
+          <caret line="22" column="24" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/config/console.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="630">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.htaccess">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/RelationOfficeManager.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1845">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/City.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2355">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/Manager.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22411953" vertical-offset="0" max-vertical-offset="2400">
+          <caret line="14" column="6" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/OfficeManager.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7524013" vertical-offset="0" max-vertical-offset="2595">
+          <caret line="47" column="57" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/standard_8.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34151548" vertical-offset="11590" max-vertical-offset="16530">
+          <caret line="794" column="9" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/iconv.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34151548" vertical-offset="595" max-vertical-offset="6750">
+          <caret line="61" column="9" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/Synchronization.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.008537887" vertical-offset="1313" max-vertical-offset="2250">
+          <caret line="92" column="65" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/config/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4087514" vertical-offset="0" max-vertical-offset="2145">
+          <caret line="88" column="21" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/PhoneRegions.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.78441834" vertical-offset="510" max-vertical-offset="2175">
+          <caret line="83" column="51" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/Site.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77588046" vertical-offset="1268" max-vertical-offset="2205">
+          <caret line="133" column="54" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/views/layouts/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.279476" vertical-offset="74" max-vertical-offset="1035">
+          <caret line="22" column="31" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/commands/CronCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.83515286" vertical-offset="0" max-vertical-offset="916">
+          <caret line="56" column="45" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/CallPhone.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2128821" vertical-offset="3510" max-vertical-offset="7395">
+          <caret line="252" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32751092" vertical-offset="0" max-vertical-offset="916">
+          <caret line="20" column="2" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/config/cron.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.024017468" vertical-offset="578" max-vertical-offset="1515">
+          <caret line="40" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../framework/zii/widgets/grid/CGridColumn.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3075">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../framework/zii/widgets/grid/CGridView.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.106987" vertical-offset="5803" max-vertical-offset="9720">
+          <caret line="82" column="30" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../framework/zii/widgets/CBaseListView.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8143982" vertical-offset="2726" max-vertical-offset="4380">
+          <caret line="237" column="24" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/controllers/SiteController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="630" max-vertical-offset="2820">
+          <caret line="38" column="51" selection-start-line="38" selection-start-column="51" selection-end-line="38" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/views/report/report.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="2670">
+          <caret line="30" column="40" selection-start-line="30" selection-start-column="40" selection-end-line="30" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/components/GridView.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="930">
+          <caret line="37" column="58" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/controllers/ReportController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="150" max-vertical-offset="5535">
+          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/protected/models/Report.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44186047" vertical-offset="426" max-vertical-offset="8910">
+          <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+          <folding>
+            <marker date="1444739865202" expanded="true" signature="14609:14640" placeholder="SELECT linke..tbl_report..." />
+            <marker date="1444739865202" expanded="true" signature="14678:14709" placeholder="SELECT linke..tbl_report..." />
+            <marker date="1444739865202" expanded="true" signature="21300:21432" placeholder="SELECT linke..tbl_call_back..." />
+            <marker date="1444739865202" expanded="true" signature="21875:21993" placeholder="UPDATE tbl_r..." />
+            <marker date="1444739865202" expanded="true" signature="22533:22678" placeholder="UPDATE tbl_r..." />
+            <marker date="1444739865202" expanded="true" signature="23280:23318" placeholder="DELETE FROM ..." />
           </folding>
         </state>
       </provider>
     </entry>
   </component>
 </project>
-

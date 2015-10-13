@@ -26,16 +26,21 @@
 		<div id="logo"><?php echo CHtml::encode(Yii::app()->name); ?></div>
 	</div><!-- header -->
 
+    <?php if(!YiiBase::app()->user->isGuest){
+
+    ?>
 	<div id="mainmenu">
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
 				array('label'=>'Отчеты', 'url'=>array('/report/')),
-				array('label'=>'Регионы', 'url'=>array('/Region/')),
-                array('label'=>'Сайты', 'url'=>array('/site/admin')),
-                array('label'=>'DID(телефоны)', 'url'=>array('/PhoneRegions/')),
+                array('label'=>'Количество звонков', 'url'=>array('/report/countcall')),
+                array('label'=>'Перезвоны по пропущенным', 'url'=>array('/report/missed')),
+//				array('label'=>'Регионы', 'url'=>array('/Region/')),
+//                array('label'=>'Сайты', 'url'=>array('/site/admin')),
+//                array('label'=>'DID(телефоны)', 'url'=>array('/PhoneRegions/')),
 				//array('label'=>'Contact', 'url'=>array('/site/contact')),
 				//array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				//array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
+				array('label'=>'Выход ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
 		)); ?>
 	</div><!-- mainmenu -->
@@ -44,6 +49,12 @@
 			'links'=>$this->breadcrumbs,
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>
+
+    <?php
+
+    }
+
+    ?>
 
 	<?php echo $content; ?>
 

@@ -55,6 +55,9 @@ class Report extends CActiveRecord
 
 
     public $cnt;
+    public $caller_id;
+
+    public $total_count = 0;
 
     /*
      * получаем список фильтров которые были применены для таблицы отчётов
@@ -64,7 +67,7 @@ class Report extends CActiveRecord
 
         $list = array();
 
-        //TODO проверить, чтобы все фильтра писались в список через запятую($_GET['Report[office_call_id]'])
+        //TODO проверить, чтобы все фильтра писались в список через
 
         foreach($_GET as $j=>$value){
 
@@ -92,7 +95,7 @@ class Report extends CActiveRecord
             //
 
             //
-            if(!empty($this->site_id)){$list[] = 'Сайт';}
+            if(!empty($this->site)){$list[] = 'Сайт';}
             //
             if(!empty($this->call_diraction)){$list[] = 'Направление звонка';}
             //
@@ -106,7 +109,8 @@ class Report extends CActiveRecord
 
             if(!empty($_GET['search_word_accept_reg_redirect'])){$list[] = 'Цепочка пройденных переадресаций';}
 
-            if(!empty($this->office_call_id)){ $list[] = 'Офис звонка';}
+            if(!empty($this->groups)){$list[] = 'Группа';}
+
         }
 
         $list = array_unique($list);
@@ -139,7 +143,9 @@ class Report extends CActiveRecord
     public function getStatusToTbl(){
         if($this->status_call==Report::CALL_ANSWERED){return 'Отвечен';}
         if($this->status_call==Report::CALL_NO_ANSWER){return 'Не отвечен';}
+        if($this->status_call==Report::CALL_BUSY){return 'Занято';}
         if($this->status_call==Report::CALL_RESET_CLIENT){return 'Сброшен клиентом';}
+        if($this->status_call==Report::CALL_FAILED){return 'Не удалось';}
     }
 
 
@@ -173,24 +179,33 @@ class Report extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-            //, waiting_time, count_redirect, chain_passed_redirects, rec_call, source, search_word
-            //call_city,did,destination_call,time_end_call, destination_call,
-			array('uniqueid,  date_call, time_start_call,  call_diraction, status_call,  linkedid, caller_id', 'required'),
-
+			array('uniqueid,  date_call, time_start_call,  call_diraction, status_call,  caller_id', 'required'),
             //проверим заполнение менеджера по звонку, если статус у звонка отвечен
             array('manager_call_id', 'check_manager'),
-
-			array('duration_call,  call_diraction, status_call, manager_call_id, waiting_time, count_redirect, phone_region_id, site_id, call_back_status', 'numerical', 'integerOnly'=>true),
-			array('uniqueid, linkedid, caller_id, destination_call, call_city, office_call_id,call_back_linkdid', 'length', 'max'=>60),
+            array('rec_call','check_rec'),//проверки записи разговора
+			array('duration_call,  call_diraction, status_call, manager_call_id, waiting_time, count_redirect,   call_back_status, user_id', 'numerical', 'integerOnly'=>true),
+			array('uniqueid, caller_id, destination_call, call_city, call_back_linkdid', 'length', 'max'=>60),
 			array('did', 'length', 'max'=>40),
-			array('rec_call, search_word', 'length', 'max'=>256),
-            //array('chain_passed_redirects', 'length', 'max'=>512),
-			array('source', 'length', 'max'=>250),
-			// The following rule is used by search().
+			array('rec_call, busy_manager, guilty_manager', 'length', 'max'=>256),
 			// @todo Please remove those attributes that should not be searched.
-			array('id, call_id, caller_id, did, call_city, date_call, time_start_call, time_end_call, duration_call, destination_call, office_call_id, call_diraction, status_call, manager_call_id, waiting_time, count_redirect, chain_passed_redirects, rec_call, phone_region_id', 'safe', 'on'=>'search'),
+			array('id, site,groups, user_id,guilty_manager, busy_manager,call_id, caller_id, did, call_city, date_call, time_start_call, time_end_call, duration_call, destination_call,  call_diraction, status_call, manager_call_id, waiting_time, count_redirect, chain_passed_redirects, rec_call', 'safe', 'on'=>'search'),
 		);
 	}
+
+    /*
+     * валидация записи разговора
+     * она должна быть уникальная+ не пустая
+     */
+    public function check_rec(){
+        if(!$this->hasErrors()){
+            if(!empty($this->rec_call)){
+                $find = YiiBase::app()->db->createCommand('SELECT id FROM {{report}} WHERE rec_call="'.$this->rec_call.'"')->queryRow();
+                if($find){
+                    $this->addError('rec_call', 'Файл записи уже существует по данному звонку');
+                }
+            }
+        }
+    }
 
     /*
      * правило валидации для заполнения менеджера по звонку
@@ -200,9 +215,9 @@ class Report extends CActiveRecord
      */
     public function check_manager(){
         if(!$this->hasErrors()){
-            if(!$this->call_back){
+            if($this->call_diraction==self::INCOMING_CALL){
                 if($this->status_call!=self::CALL_BUSY && $this->status_call!=self::CALL_NO_ANSWER &&$this->status_call!=self::CALL_RESET_CLIENT  && empty($this->manager_call_id)){
-                    $this->addError('manager_call_id', 'Не указан менеджер принвяший звонок');
+                    $this->addError('manager_call_id', 'Не указан менеджер принявший звонок');
                 }
             }
         }
@@ -228,43 +243,13 @@ class Report extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'officeсall' => array(self::BELONGS_TO, 'OfficeManager', 'office_call_id'),
+
 			'managerCall' => array(self::BELONGS_TO, 'Manager', 'manager_call_id'),
             'callcity' => array(self::BELONGS_TO, 'City', 'call_city'),
-            //'site' => array(self::BELONGS_TO, 'Site', 'site_id'),
+
 		);
 	}
 
-    /*
-     * Получаем название сайта по его ID
-     */
-    public function getSite(){
-        if($this->site_id==0){
-            return '';
-        }else{
-            return Site::getSiteById($this->site_id);
-        }
-    }
-
-    /*
-     * для таблицы отчётов получаем название офиса по строке, если там значение!=0
-     */
-    public function getCallOffice(){
-        if($this->office_call_id!=0){
-            return OfficeManager::getListOffice($this->office_call_id);
-        }else{
-            return '';
-        }
-        /*if(!empty($this->office_call_id)){
-            if($this->office_call_id!=0){
-                return OfficeManager::getOfficeById($this->office_call_id);
-            }else{
-                return '';
-            }
-        }else{
-            return '';
-        }*/
-    }
 
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -274,7 +259,7 @@ class Report extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'uniqueid' => 'ID звонка',//это уникальный номер очереди которая входит с состав звонка
-            'linkedid'=>'Уникальный идентификатор звонка',//
+            //'linkedid'=>'Уникальный идентификатор звонка',//
 			'caller_id' => 'Номер клиента (Caller ID)',
 			'did' => 'Виртуальный номер на который позвонил клиент (DID)',
 			'call_city' => 'Город звонка',
@@ -283,7 +268,6 @@ class Report extends CActiveRecord
 			'time_end_call' => 'Время конца разговора',
 			'duration_call' => 'Продолжительность звонка',
 			'destination_call' => 'Destination звонка',
-			'office_call_id' => 'Офис',
 			'call_diraction' => 'Направление звонка',
 			'status_call' => 'Статус обработки звонка',
 			'manager_call_id' => 'Менеджер звонка',
@@ -291,9 +275,8 @@ class Report extends CActiveRecord
 			'count_redirect' => 'сколько раз звонок был переадресован между менеджерами, прежде чем трубка была поднята',
 			'chain_passed_redirects' => 'Цепочка пройденных переадресаций в формате имен менеджеров "сева-катя-джамал" и пр',
 			'rec_call' => 'Запись звонка',
-			'source' => 'Источник звонка(API calltoch)',
-			'search_word' => 'Поисковая фраза(API calltouch)',
-            'site_id'=>'Сайт',
+            'site'=>'Сайт',
+            'groups'=>'Группа',
             'call_back_status'=>'Автоперезвон',
             'call_back_linkdid'=>'linkdid автоперезвона по этому пропущенному звонку',
 		);
@@ -356,7 +339,6 @@ class Report extends CActiveRecord
 		$criteria->compare('time_end_call',$this->time_end_call);
 		$criteria->compare('duration_call',$this->duration_call);
 		$criteria->compare('destination_call',$this->destination_call);
-		$criteria->compare('office_call_id',$this->office_call_id);
 		$criteria->compare('call_diraction',$this->call_diraction);
 		$criteria->compare('status_call',$this->status_call);
 		$criteria->compare('manager_call_id',$this->manager_call_id);
@@ -384,23 +366,21 @@ class Report extends CActiveRecord
 	}
 
     /*
-     * получаем список идентификаторов каналов для звонков
-     * почему именно каналов а не идентификаторов звонк ? - по той таблице где мы делаем первоначальную выборку нет идентификаторов звонков
-     * $intervalMinuts - за какой промежуток времени делаем выборку данных, в минутах
+     * поиск звонка по linkedid
      */
-    static function getListId($intervalMinuts = ''){
-
-        //если указан интервал выборки делаем выборку за интервал времени
-        if(!empty($intervalMinuts)){
-            $sql = 'SELECT linkedid FROM tbl_report';
-        }else{
-            $sql = 'SELECT linkedid FROM tbl_report';
+    public static function issetRepostByLinkedid($linkedid){
+        if($linkedid){
+            $row = YiiBase::app()->db->createCommand('SELECT id FROM tbl_report WHERE uniqueid=:uniqueid')->bindParam(':uniqueid', $linkedid, PDO::PARAM_STR)->queryRow();
+            if(empty($row)){
+                return false;
+            }else{
+                return true;
+            }
         }
 
-        $rows = YiiBase::app()->db->createCommand($sql)->queryAll();
-
-        return $rows;
+        return false;
     }
+
 
     /*
       * формируем сслыку на скачивание файла аудио-записи разговора
@@ -409,18 +389,21 @@ class Report extends CActiveRecord
 
         $link = '';
 
-        if(!empty($this->rec_call)){
-            $url_download = 'http://80.84.116.238/download.php?file='.date('Y/m/d/',strtotime($this->date_call)).$this->rec_call;
-            $link  = CHtml::link('Скачать',$url_download);
+        $url_download = '/records2/'.date('Y/m/d/',strtotime($this->date_call)).$this->rec_call;
 
+        if($this->rec_call && file_exists('/var/www/polzovatel/data/www/skz.seosoft.su'.$url_download)){
 
-            $div = $link.'<div id="'.$this->linkedid.'">
-                            <audio>
-                                <source src="'.$url_download.'" type="audio/x-wav" >
-                            </audio>
-                         </div>';
+            $url_download = 'http://89.108.105.108/restapi/rec.php?rec='.urlencode('/var/spool/asterisk/monitor/'.date('Y/m/d/',strtotime($this->date_call)).$this->rec_call);
 
-            //return $div;
+            $link  = CHtml::link('Скачать',$url_download, array("target"=>"_blank"));
+
+//            $div = '<div id="'.uniqid('tbl_').'">
+//                            <audio>
+//                                <source src="'.$url_download.'" type="audio/x-wav" >
+//                            </audio>
+//                         </div>';
+//
+//            return $div;
         }
 
         return $link;
@@ -429,7 +412,7 @@ class Report extends CActiveRecord
     /*
        * экспорт данных в файл экспорта
        */
-    //TODO доделать экспорт данных в файл, проверить все столбц ли экспортятся
+    //
     public function exportToFile($dataProvider, $nameFile){
         $h1 = iconv('utf-8', 'windows-1251//IGNORE','ID звонка');
         $h2 = iconv('utf-8', 'windows-1251//IGNORE','Номер клиента');
@@ -440,17 +423,18 @@ class Report extends CActiveRecord
         $h7 = iconv('utf-8', 'windows-1251//IGNORE','Время конца разговора');
         $h8 = iconv('utf-8', 'windows-1251//IGNORE','Продолжительность звонка');
         $h9 = iconv('utf-8', 'windows-1251//IGNORE','Destination звонка');
-        $h10 = iconv('utf-8', 'windows-1251//IGNORE','Офис звонка');
-        $h11 = iconv('utf-8', 'windows-1251//IGNORE','Направление звонка');
-        $h12 = iconv('utf-8', 'windows-1251//IGNORE','Статус обработки звонка');
-        $h13 = iconv('utf-8', 'windows-1251//IGNORE','Менеджер звонка');
-        $h14 = iconv('utf-8', 'windows-1251//IGNORE','Время ожидания клиента');
-        $h15 = iconv('utf-8', 'windows-1251//IGNORE','Кол-во переадресаций');
-        $h16 = iconv('utf-8', 'windows-1251//IGNORE','Цепочка пройденных переадресаций');
-        $h17 = iconv('utf-8', 'windows-1251//IGNORE','Запись звонка');
+        $h11 = iconv('utf-8', 'windows-1251//IGNORE','Сайт');
+        $h12 = iconv('utf-8', 'windows-1251//IGNORE','Направление звонка');
+        $h13 = iconv('utf-8', 'windows-1251//IGNORE','Статус обработки звонка');
+        $h14 = iconv('utf-8', 'windows-1251//IGNORE','Менеджер звонка');
+        $h15 = iconv('utf-8', 'windows-1251//IGNORE','Время ожидания клиента');
+        $h16 = iconv('utf-8', 'windows-1251//IGNORE','Кол-во переадресаций');
+        $h17 = iconv('utf-8', 'windows-1251//IGNORE','Цепочка пройденных переадресаций');
+        $h19 = iconv('utf-8', 'windows-1251//IGNORE','Группа');
+        $h18 = iconv('utf-8', 'windows-1251//IGNORE','Автоперезвон');
 
 
-        $header = array($h1, $h2, $h3, $h4, $h5, $h6, $h7, $h8, $h9);
+        $header = array($h1, $h2, $h3, $h4, $h5, $h6, $h7, $h8, $h9,  $h11, $h12, $h13, $h14, $h15, $h16, $h17, $h19,$h18);
 
         //создаём файл для экспорта, и с помощью ИТЕРАТОРА выбираем данные порциями и записываем их в файл, чтобы не было нихватки памяти по большой выборке данных
         $out = fopen($nameFile, 'w');
@@ -465,20 +449,33 @@ class Report extends CActiveRecord
         // обходим данные для каждой строки из логов
         foreach($iterator as $row){
 
-            $iterator->callOffice = mb_convert_encoding($iterator->callOffice, "windows-1251", "utf-8");
+            //$callOffice = mb_convert_encoding($row->callOffice, "windows-1251", "utf-8");
+            $call_city = mb_convert_encoding($row->call_city, "windows-1251", "utf-8");
+            $StatusToTbl = mb_convert_encoding($row->StatusToTbl, "windows-1251", "utf-8");
+            $manager = mb_convert_encoding(($row->manager_call_id!=0)?$row->managerCall->fio:"", "windows-1251", "utf-8");
+            $callbackstatus = mb_convert_encoding($row->callbackstatus, "windows-1251", "utf-8");
+            $calldiraction = mb_convert_encoding($row->calldiraction, "windows-1251", "utf-8");
+            $site = mb_convert_encoding($row->site, "windows-1251", "utf-8");
 
             $data =  array(
-                $iterator->uniqueid,
-                $iterator->caller_id,
-                $iterator->did,
-                $iterator->call_city,
-                $iterator->date_call,
-                $iterator->time_start_call,
-                $iterator->time_end_call,
-                $iterator->duration_call,
-                $iterator->destination_call,
-                $iterator->callOffice,
-
+                $row->uniqueid,
+                $row->caller_id,
+                $row->did,
+                $call_city,
+                $row->date_call,
+                $row->time_start_call,
+                $row->time_end_call,
+                $row->duration_call,
+                $row->destination_call,
+                $site,
+                $calldiraction,
+                $StatusToTbl,
+                $manager,
+                $row->waiting_time,
+                $row->count_redirect,
+                $row->chain_passed_redirects,
+                $row->groups,//группа
+                $callbackstatus,
             );
 
             fputcsv($out, $data,';');
@@ -493,10 +490,14 @@ class Report extends CActiveRecord
 
     protected function afterSave() {
         parent::afterSave();
+
         if ($this->isNewRecord) {
+            //получаем номер дня в неделе текущего дня
+            //$day = date('N', time());
             //проверяем статус звонка, чтобы добавить его в очередь автоперезвона
-            if($this->call_diraction==Report::INCOMING_CALL && !$this->call_back){//ТОЛЬКО ВХОДЯЩИЙ
-                if($this->status_call==Report::CALL_NO_ANSWER || $this->status_call==Report::CALL_RESET_CLIENT){
+            if($this->call_diraction==Report::INCOMING_CALL){//ТОЛЬКО ВХОДЯЩИЙ
+
+                if(($this->status_call==Report::CALL_NO_ANSWER || $this->status_call==Report::CALL_RESET_CLIENT)){//&& ($day<6)
 
                     //установим статус у пропущенной заявки - как ждёт отправки заявки на перезвон
                     YiiBase::app()->db->createCommand('UPDATE {{report}} SET call_back_status="'.self::CALL_BACK_WAIT.'" WHERE id="'.$this->id.'"')->execute();
@@ -508,33 +509,32 @@ class Report extends CActiveRecord
                     if(!in_array($this->caller_id,$exeption_list) && preg_match('/[0-9]{7,15}/',$this->caller_id)){
 
                         $call_back = new Callback();
-                        $call_back->client_number = $this->caller_id;
-                        //если офис не указан у звонка(статус - сброшен клиентом)
-                        if(empty($this->office_call_id) || $this->office_call_id==0){
-                            //укажим офис - 300 электрозавод
-                            $call_back->office = 3;//электрозавод
-                        }else{
-                            $call_back->office = $this->office_call_id;
-                        }
-                        //0000-00-00 00:00:00
+                        $call_back->client_number = CallPhone::preparePhone($this->caller_id);
                         $call_back->call_date = date('Y-m-d H:i:s',strtotime($this->date_call.' '.$this->time_start_call));
-                        $call_back->linkedid = trim($this->linkedid);
+                        $call_back->linkedid = $this->uniqueid;
                         $call_back->status = 2;
-                        $call_back->site = Site::getSiteById($this->site_id);//укажем для какого сайта был звонок
-                        if(!$call_back->save()){
-                            echo '<pre>'; print_r($call_back->errors);
+                        $call_back->site = $this->site;//укажем для какого сайта был звонок
+                        if($call_back->validate()){
+                            $call_back->save();
                         }else{
-                            //echo '<pre>'; print_r($this->linkedid);
-                            //echo '<pre>'; print_r($call_back->linkedid);//die();
+                            //echo '<pre>'; print_r($call_back->attributes);
+                            echo '<pre>'; print_r($call_back->errors);
                         }
                     }
 
+                }else{
+                    //проверим статус ЗВОНКА,  удалим его из списка автоперезвонов(если он туда записан)
+                    if($this->status_call==Report::CALL_ANSWERED){//если он отвечен,
+                        //удалим его из списка автоперезвонов(если он туда записан)
+                        YiiBase::app()->db->createCommand('DELETE FROM {{call_back}} WHERE client_number=:client_number')
+                            ->bindValue(':client_number', CallPhone::preparePhone($this->caller_id), PDO::PARAM_STR)
+                            ->execute();
+                    }
                 }
             }
-
-            //был автоперезвон, по ранее отправленной заявке
-            //подвязываем к пропущенному звонку текущий звонок+укажем статус перезвона(для пропущенного звонка)
-            if($this->call_back){
+            //исходящие звонки - проверка перезвона по звонку
+            //проверим ИСХОДЯЩИЕ - звонки
+            if($this->call_diraction==Report::OUTGOING_CALL){
                 $this->callBackUpdateInfo();
             }
         }
@@ -545,25 +545,20 @@ class Report extends CActiveRecord
      */
     public function callBackUpdateInfo(){
 
-        if($this->office_call_id==0 || empty($this->office_call_id)){
-            $office_call_id = 3;//электрозавод
-        }else{
-            $office_call_id = $this->office_call_id;
-        }
-
-        $sql = 'SELECT linkedid, id FROM tbl_call_back WHERE client_number="'.$this->caller_id.'" AND office="'.$office_call_id.'"  ORDER BY id DESC';//AND status="'.Callback::SEND_CALL.'"
+        $sql = 'SELECT linkedid, id FROM tbl_call_back WHERE client_number="'.CallPhone::preparePhone($this->did).'" ORDER BY id DESC';//AND status="'.Callback::SEND_CALL.'"
 
         $find_call = YiiBase::app()->db->createCommand($sql);
+
         $find_row = $find_call->queryRow();
 
-        if(!empty($find_row)){
+        if($find_row){
             //привяжем звонок из перезвона со входящим пропущенным звонком от клиента
             //т.е. сперва найдём пропущенный звонок из раннее сделанных+ привяжем к нему инфу о текущем звонке и удалим из очереди заявку на перезвон
-            $sql_update = 'UPDATE tbl_report SET call_back_linkdid=:call_back_linkdid,call_back_status=:call_back_status WHERE linkedid=:linkedid';
+            $sql_update = 'UPDATE tbl_report SET call_back_linkdid=:call_back_linkdid,call_back_status=:call_back_status WHERE uniqueid=:uniqueid';
             $query_update = YiiBase::app()->db->createCommand($sql_update);
             $query_update->bindValue(':call_back_linkdid',$this->uniqueid, PDO::PARAM_STR);
             $query_update->bindValue(':call_back_status',self::CALL_BACK_ACTION_CLIENT, PDO::PARAM_INT);
-            $query_update->bindValue(':linkedid',$find_row['linkedid'], PDO::PARAM_INT);
+            $query_update->bindValue(':uniqueid',$find_row['linkedid'], PDO::PARAM_INT);
             $query_update->execute();
 
             /*
@@ -573,7 +568,7 @@ class Report extends CActiveRecord
             $query_update_ = YiiBase::app()->db->createCommand($upd_sql);
             $query_update_->bindValue(':call_back_linkdid',$this->uniqueid, PDO::PARAM_STR);
             $query_update_->bindValue(':call_back_status',self::CALL_BACK_ACTION_CLIENT, PDO::PARAM_INT);
-            $query_update_->bindValue(':caller_id',$this->caller_id, PDO::PARAM_STR);
+            $query_update_->bindValue(':caller_id',CallPhone::preparePhone($this->did), PDO::PARAM_STR);
             $query_update_->bindValue(':date_call',$this->date_call, PDO::PARAM_STR);
             $query_update_->execute();
 

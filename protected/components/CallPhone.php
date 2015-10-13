@@ -66,101 +66,273 @@ class CallPhone{
         }
     }
 
+    /**
+     * Get a web file (HTML, XHTML, XML, image, etc.) from a URL.  Return an
+     * array containing the HTTP server response header fields and content.
+     */
+    function get_web_page( $url )
+    {
+        $user_agent='Mozilla/5.0 (Windows NT 6.1; rv:8.0) Gecko/20100101 Firefox/8.0';
+
+        $options = array(
+
+            CURLOPT_CUSTOMREQUEST  =>"GET",        //set request type post or get
+            CURLOPT_POST           =>false,        //set to GET
+            CURLOPT_USERAGENT      => $user_agent, //set user agent
+            //CURLOPT_COOKIEFILE     =>"cookie.txt", //set cookie file
+            //CURLOPT_COOKIEJAR      =>"cookie.txt", //set cookie jar
+            CURLOPT_RETURNTRANSFER => true,     // return web page
+            CURLOPT_HEADER         => false,    // don't return headers
+            CURLOPT_FOLLOWLOCATION => false,     // follow redirects
+            CURLOPT_ENCODING       => "",       // handle all encodings
+            CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+            CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+            CURLOPT_TIMEOUT        => 120,      // timeout on response
+            CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+        );
+        //echo $url.PHP_EOL;
+        $ch      = curl_init( $url );
+        curl_setopt_array( $ch, $options );
+        $content = curl_exec( $ch );
+        $err     = curl_errno( $ch );
+        $errmsg  = curl_error( $ch );
+        $header  = curl_getinfo( $ch );
+        curl_close( $ch );
+
+        $header['errno']   = $err;
+        $header['errmsg']  = $errmsg;
+        $header['content'] = $content;
+
+        if ( $header['errno'] != 0  || $header['http_code'] != 200 ){
+            echo 'curl get errors'.PHP_EOL;
+            print_r($header['errmsg']);
+        }
+
+
+        return $header;
+    }
 
     /*
-     * копируем данные из БД Астерикса по звонкам
+     * отравляем запрос на АПИ Астериска и выбираем данные за интервал
+     * $from - интервал ОТ
+     * $to - интервал ДО
      */
-    public function run(){
+    public function sendToAPI($from, $to){
 
-        //получаем список УНИКАЛЬНЫХ идентификаторов звонков за некий интервал, а далее по этим "linkedid" делаем выборки данных
-        $linkedid_list = $this->getUniqueLinkDidList();
+        //пример урлы лоя АПИ http://80.84.116.238/restapi/aster_api.php?action=call&filter_from=2015-01-19%2010:22:00&filter_to=2015-01-19%2011:22:22
+        //обязательно надо указывать интервал дат для выборки
+        //echo 'http://80.84.116.238/restapi/aster_api.php?action=call&filter_from='.$from.'&filter_to='.$to.PHP_EOL;die();
 
-        //есть звонки для выборки
-        if(!empty($linkedid_list)){
-            // перебираем список Идентифиторов звонков и собираем инфу и добавим, если данного звонка не было в системе
-            foreach($linkedid_list as $link_did){
+        //$from = '2015-07-22%2001:22:00';
+        //$to = '2015-07-031%2016:22:22';
 
-                //если уже есть инфа по данному взонку пропускаем дальнейший анализ данных
-                if($this->issetCall($link_did['linkedid'])){ continue;}
 
-                //ищем общую информацию о звонке
-                /*
-                 * в таблице "cdr" пол "uniqueid"= полю "linkedid" из таблицы "cel" и поэтому получаем список звонков по таблице БЕЗ событий и потом просматриваем события детально
-                 */
-                $sql = 'SELECT calldate,did,duration,cnum,cnam,recordingfile,uniqueid,dst, disposition, src FROM cdr WHERE uniqueid=:uniqueid';
+        $json = $this->get_web_page('http://89.108.105.108/restapi/aster_api_.php?action=call&filter_from='.$from.'&filter_to='.$to);
 
-                $query = YiiBase::app()->db2->createCommand($sql);
 
-                $query->bindValue(':uniqueid', $link_did['linkedid'], PDO::PARAM_STR);
 
-                $row = $query->queryRow();
+        $calls = json_decode($json['content'], true);
 
-                //проверим отфильтровываем ли мы этот ЛИНК_ДИД или нет
-                $events = $this->checkCall($link_did['linkedid']);
+        //echo '<pre>'; print_r($calls); die();
 
-                //если нет инфы, звонок нам не подходит, то пропускаем его
-                if(empty($events)){continue;}
+        if($calls){
 
-                $model = new Report();
+            foreach($calls as $call){
 
-                if(!empty($row)){
-                    //уникальный ID звонка это поле "linkedid" в таблице событий(cdr),т.е. может быть несколько "uniqueid" подвязанных к одному звонку(linkedid)
-                    $model->uniqueid = $row['uniqueid'];
-                    $model->linkedid = $this->getUniqueIdCall($row['uniqueid']);
-                    $model->date_call  = self::getDateFromDateTime($row['calldate']);//'дата звонка в формате год месяц число',
-                    $model->time_start_call  = self::getTimeFromDateTime($row['calldate']);//Время начала разговора
-                    $model->rec_call  = $row['recordingfile'];//'Запись звонка',
-                }else{
+                //echo $call['linkedid'].PHP_EOL;
 
-                    //уникальный ID звонка это поле "linkedid" в таблице событий(cdr),т.е. может быть несколько "uniqueid" подвязанных к одному звонку(linkedid)
-                    $model->uniqueid = $link_did['linkedid'];
-                    $model->linkedid = $link_did['linkedid'];
+                //проверим существование информации о звонке - проверка на дублирование
+                $find = Report::issetRepostByLinkedid($call['linkedid']);
 
-                    $model->rec_call  = '';//'Запись звонка',appname
-                }
+                //не нашли записи по идентификатору звонка
+                if($find==false){
 
-                //отлавливаем и просчитываем события и пишим их в модель
-                $model = $this->callPhoneEvents($model, $events);
 
-                //определяем сайт для входящего звонка
-                if(empty($model->site_id)){
-                    $site_id = PhoneRegions::getSiteByDid($model->did);
-                    if(!empty($site_id)){
-                        $model->site_id = $site_id['site_id'];
+                    $report = new Report();
+
+                    //определим недостающие параметры для записи в модель
+                    if($call['call_diraction']==Report::INCOMING_CALL){//1 - входящий звонок, 2 - исходящий
+
+                        //заглушка
+                        if($call['did']=='78007753079' || $call['did']=='00030055' || $call['did']=='74993482371'){
+                            $report->site = 'theservice.ru';
+                            $report->call_city = 'Москва';
+                        }else{
+                            //для входящего звонка определим город и сайт
+                            $info = PhoneRegions::getInfoByDid($call['did']);
+                            if($info){
+                                $report->site = $info['site'];
+                                $report->call_city = $info['region'];
+                            }
+
+                            //если не удалось определить город, тогда считаем что это была заявка ан перезвон с сайта, через форму, а значит ИСХОДЯЩИЙ звонок
+                            if(empty($call['did']) && empty($report->call_city)){
+                                $call['call_diraction'] = Report::OUTGOING_CALL;//исходящий звонок
+                            }
+                        }
+                    }
+
+                    //основные параметры звонка
+                    $report->caller_id = CallPhone::preparePhone($call['caller_id']);//номер звонившего
+                    $report->uniqueid = $call['linkedid'];//ID звонка
+                    $report->rec_call = $call['rec_call'];//запись разговора
+                    $report->waiting_time = $call['waiting_time'];//время ожидания клиента
+                    $report->date_call  = self::getDateFromDateTime($call['date_call']);//'дата звонка в формате год месяц число',
+                    if(isset($call['redirect_list'])){
+                        $report->count_redirect = sizeof($call['redirect_list']);//кол-во редиректов по менеджерам
+                    }else{
+                        $report->count_redirect = 0;
+                    }
+
+                    $report->duration_call = $call['duration_call'];//продолжительность звонка
+                    $report->groups = $call['manager_group'];//группа - юр. лица, физ. лица или другие
+                    $report->call_diraction = $call['call_diraction'];//направление звонка
+                    $report->status_call = Report::statusCallToInt($call['status_call']);
+                    $report->did = CallPhone::preparePhone($call['did']);//кто звонит
+                    $report->time_start_call  = self::getTimeFromDateTime($call['date_call']);//Время начала разговора
+                    $report->time_end_call = self::getTimeFromDateTime(date('Y-m-d H:i:s',(int)strtotime($call['date_call'])+(int)$call['duration_call']));//время завершения разговора
+
+                    if(isset($call['destination_call']) && $call['call_diraction']==Report::INCOMING_CALL){
+                        $report->destination_call = $call['destination_call'];
+                    }
+
+                    //answer_manager
+                    //поиск менеджера по коду
+                    if(isset($call['answer_manager'])){
+                        $report->manager_call_id = Manager::getIdByCode($call['answer_manager']);
+                    }
+
+                    //список редиректов по звонку
+                    if(isset($call['redirect_list'])){
+
+                        //ищем соответствия кодам - менеджерам, что к ним подвязаны, чтобы получить"сева-катя-джамал"
+                        $managers = Manager::findByCodeList($call['redirect_list']);//получаем массив соответствий менеджеров по коду
+
+                        //проверим всех ли менеджеров нашли по кодам, если кого-то НЕ нашли, значит надо обновить данные - синхронизировать справочник менеджеров
+                        if(sizeof($managers)!==sizeof($call['redirect_list'])){
+
+                            $sync = new Synchronization();
+
+                            $sync->catalogManager();
+
+                            //а теперь перезапустим обработку редиректов по менеджерам
+                            $managers = Manager::findByCodeList($call['redirect_list']);//получаем массив соответствий менеджеров по коду
+                        }
+
+                        $managers_list = $this->arrayToString($managers, 'fio');
+
+                        $report->chain_passed_redirects = implode('-',CHtml::listData($managers, 'fio', 'fio'));
+
+                        //определяем менеджера звонка, последний повесивший трубку - его звонок
+                        if($call['call_diraction']==Report::INCOMING_CALL){
+                            $code_manager = end($call['redirect_list']);
+                        }else{
+                            //для исходящего звонка - номер звонившего менеджера и будет кодом менеджера к звонку
+                            $code_manager = $report->caller_id;
+                        }
+
+                        if(!$report->manager_call_id){
+                            //поиск менеджера по коду
+                            $report->manager_call_id = Manager::getIdByCode($code_manager);
+                        }
+
+                        //если звонок исходящий то номер звонившего должен быть менеджер, а дестинейшин - номер клиента
+                        if($report->call_diraction==Report::OUTGOING_CALL){
+                            if(strlen($report->caller_id)>6){
+                                //номер звонившего - это менеджер, а номер клиента дестинейшин
+                                $report->caller_id = $code_manager;
+                                $report->did = $report->destination_call;
+                                $report->destination_call = '';
+                            }
+                        }
+                    }
+
+
+                    //если не указан менеджер по звонку+ звонок входящий, то статус у звонка не отвечен
+                    if($report->call_diraction==Report::INCOMING_CALL && empty($report->manager_call_id)){
+                        $report->status_call = Report::CALL_NO_ANSWER;
+                    }
+
+                    /*
+                     * сброшен клиентом
+                     * s в столбце дестинейшен) описывает ситуацию, когда вызов сброшен клиентом на стадии "приветствие".
+                     * Необходимо ввести статус обработки звонка "сброшен клиентом" в столбце Статус обработки звонка
+                     */
+                    if($call['destination_call']=='s'){$report->status_call = Report::CALL_RESET_CLIENT;}
+
+
+
+                    //определяем к Какому пользователю. отнести звонок
+                    if($report->call_diraction==Report::INCOMING_CALL){
+                        $number = $report->did;
+                    }else{
+                        $number = $report->caller_id;
+                    }
+
+                    $report->user_id = User::wharUserForCall($number, $report->call_diraction);
+
+                    //заглушка - звонок ИСХОДЯЩИЙ+номер звонившего(более 7 цифр), а номер куда звоним - менее 11 цифр(перепутано местами) и менеджер не указан
+                    if($report->call_diraction==Report::OUTGOING_CALL){
+                        if(empty($report->did) && strlen($report->caller_id)==11 && empty($report->user_id)){
+                            $report->did = $report->caller_id;
+                            if($report->count_redirect==1){
+                                $find_manager = Manager::model()->findByAttributes(array('fio'=>trim($report->chain_passed_redirects)));
+                                if($find_manager){
+                                    $report->manager_call_id = $find_manager->id;
+                                    $report->caller_id = $find_manager->code;
+                                    $report->user_id =  $find_manager->user_id;
+                                }
+                            }
+                            //$report->user_id = User::wharUserForCall($number, $report->call_diraction);
+                        }
+                    }
+
+
+                    //пропущенный звонок либо занятый - проставляем мписок свободных менеджеров на момент звонка+ кто не взял трубку
+                    if($report->call_diraction==Report::INCOMING_CALL){
+
+                        //$manager_by_code = Manager::model()->findByAttributes(['code'=>]);
+
+                        if($report->status_call==Report::CALL_BUSY || $report->status_call==Report::CALL_FAILED || $report->status_call==Report::CALL_NO_ANSWER){
+                            $report->busy_manager = Channels::getDataByCall(strtotime($call['date_call']));
+                            //из списка переадресаций исключаем тех менеджеров которые были заняты в тек. момент и получаем тех, кто был типа свободен
+                            if(!empty($report->busy_manager)){
+                                $busy = explode('-',$report->busy_manager);//список менеджеров занятых
+                            }else{
+                                $busy = array();//список менеджеров занятых
+                            }
+                            if(!empty($report->chain_passed_redirects)){
+                                $all = explode('-',$report->chain_passed_redirects);
+                            }else{
+                                $all = array();
+                            }
+
+                            $guilty = array();
+                            if(count($all)>0){
+                                foreach($all as $maybe_guilty){
+                                    if(!in_array($maybe_guilty, $busy)){
+                                        $guilty[] = $maybe_guilty;
+                                    }
+                                }
+                            }
+                            if($guilty){
+                                $report->guilty_manager = implode('-', $guilty);
+                            }
+                        }
+                    }
+
+                    if($report->validate()){
+                        $report->save();
+                    }else{
+                        echo '<pre>'; print_r($report->attributes);
+                        echo '<pre>'; print_r($report->getErrors());
                     }
                 }
 
-
-                $model->caller_id = str_replace('+', '',$model->caller_id);
-
-                //если звонок ИСХОДЯЩИЙ, не пишим Дестинейшин
-                if($model->call_diraction == Report::OUTGOING_CALL){
-                    $model->destination_call = '';//'Destination звонка',
-                    //при исходящем звонке определяем город по тому, куда звонит менеджер, по номеру клиента
-                    $model->call_city  = City::getCityByPhone($model->caller_id);//'Город звонка',
-                }else{
-                    $model->destination_call = $row['dst'];//'Destination звонка',
-                    $model->call_city  = City::getCityByPhone($model->did);//'Город звонка',
-                }
-
-                /*
-                 * сброшен клиентом
-                 * s в столбце дестинейшен) описывает ситуацию, когда вызов сброшен клиентом на стадии "приветствие".
-                 * Необходимо ввести статус обработки звонка "сброшен клиентом" в столбце Статус обработки звонка
-                 */
-                if($model->destination_call=='s'){$model->status_call = Report::CALL_RESET_CLIENT;}
-
-
-                //echo '<pre>'; print_r($model->attributes);echo ('call_back='.$model->call_back); die();
-                if($model->validate()){
-                    $model->save();
-                }else{
-                    echo '<pre>'; print_r($model->errors);
-                    echo '<pre>'; print_r($model->attributes);
-                }
             }
         }
     }
+
 
     /*
      * преобразовываем дату_время в дату для mysql
@@ -209,33 +381,6 @@ class CallPhone{
         return $row['linkedid'];
     }
 
-    /*
-     * делаем выборку Уникальных идентификаторов звонков за интервал времени
-     * интервал времени - $this->intervalMinuts
-     * выборка нужна, чтобы не выбирать посторяющие данные по звонкам из таблицы "cdr"
-     */
-    public function getUniqueLinkDidList(){
-
-        //AND `linkedid`="1407399661.31900"
-        //AND `linkedid`="1407736201.70375"
-        //AND `linkedid`="1407850917.92741"
-        $sql = 'SELECT DISTINCT (linkedid)
-                FROM cel
-                WHERE `eventtime` > SUBDATE(CURRENT_TIMESTAMP , INTERVAL :minute MINUTE)
-                AND eventtype="LINKEDID_END"
-
-                ORDER BY eventtime DESC';
-
-        $query = YiiBase::app()->db2->createCommand($sql);
-
-        $query->bindValue(':minute', intval($this->intervalMinuts+4), PDO::PARAM_INT);
-
-
-
-        $rows = $query->queryAll();
-
-        return $rows;
-    }
 
     public function findRecByUnique($unique){
         $sql = 'SELECT recordingfile  FROM `cdr` WHERE `uniqueid` LIKE :unique';
@@ -244,226 +389,19 @@ class CallPhone{
     }
 
     /*
-     * анализируем цепочку событий по Идентификатору звонка
-     * $model - строка с первичными данными для сохранения, на основании их собираем остальные и пишим строку целиком
-     * выбираем данные по Уникальному идентификатору звонка, а не очереди(linkedid)
+     * очищаем номер телефона от лишних символов+заменяем первую цифры на "7"
      */
-    public function callPhoneEvents($model,$events){
+    static function preparePhone($phone){
 
+        $result = '';
 
-        $time_connect_server = '';//начальное время получения запроса на сервере(событие звонок)
-        $time_last_answer = '';//последнее событие ответа, менеджер поднял трубку и ответил на звонок, последний ФТНСВЕР это поднятие трубки
-        $time_disconnect = '';//отключение от сервере, последнее событие по звонку
-
-        //массив редиректов по звонку(менеджер переключил на другого менеджера)
-        $redirect_list = array();
-
-        $answered_call = false;//был ли отвечен звонок
-
-        $second_can_start = false;
-
-        foreach($events as $index=>$event){
-
-            //определяем файл записи разговора
-            if(empty($model->rec_call) && $event['appname']=='Answer'){
-                $model->rec_call  = $this->findRecByUnique($event['uniqueid']);//'Запись звонка',
-            }
-
-            //проверка на АВТОДОЗВОН - совпадение в описании звонка по регулярке
-            if(!$model->call_back){
-                if(preg_match('/(.*?)_(.*?):(.*?)_(.*?)/',$event['cid_name'])){$model->call_back = true;$model->call_diraction = Report::OUTGOING_CALL;}
-            }
-
-            //заглушка, для исходящих звонков
-            if(preg_match('/CID:/',$event['cid_name']) && empty($model->caller_id)){
-                $model->caller_id = $event['cid_num'];
-                $model->call_diraction = Report::OUTGOING_CALL;//исходящий звонок
-            }
-
-            //отлавливаем направление звонка, определяем по короткому коду во втором "chan_start" в списке событий по звонку
-            if($event['eventtype']=='CHAN_START' && $second_can_start && empty($model->office_call_id)){
-                //по корооткому коду определяем направление звонка, по первой цифре в номере
-                $course_call = mb_substr($event['exten'],0,1);
-                //по первой цифре определяем направление звонка
-                $model->office_call_id = $course_call;
-            }
-            //отлавливаем ВТОРОЕ открытие канала для звонка
-            if($event['eventtype']=='CHAN_START' && empty($model->office_call_id) && !$second_can_start){
-
-                $model->date_call  = self::getDateFromDateTime($event['eventtime']);//'дата звонка в формате год месяц число',
-                $model->time_start_call  = self::getTimeFromDateTime($event['eventtime']);//Время начала разговора
-
-
-                if(empty($event['cid_name']) && empty($event['cid_num'])){
-                    $model->call_back = true;$model->call_diraction = Report::OUTGOING_CALL;
-                }
-                $second_can_start = true;
-            }
-
-            if($event['eventtype']=='LINKEDID_END' && empty($time_disconnect)){
-                $time_disconnect = $event['eventtime'];
-            }
-
-            //отлавливаем цепочку переадресаций по звонку
-            if($event['eventtype']=='CHAN_START' && !empty($event['cid_num']) && strlen($event['cid_num'])<6 ){
-                $redirect_list[] = $event['cid_num'];
-            }
-
-
-            //по первой строке событий определяем исходящий или входящий звонок
-            if($event['eventtype']=='CHAN_START' && empty($model->call_diraction)){
-                //если длина номера с которого звонят более 6цифр, значит ВХодящий звонок иначе Исходящий
-                if(strlen($event['cid_num'])>6){
-                    $model->call_diraction = Report::INCOMING_CALL;//входящий звонок
-                }else{
-                    $model->call_diraction = Report::OUTGOING_CALL;//исходящий звонок
-
-                    if(empty($model->manager_call_id)){
-                        $model->manager_call_id = CallPhone::getManagerByCode($event['cid_num']);
-                    }
-
-                    if(strlen($event['cid_num'])>8){
-                        //УКАЖИМ НА КАКОЙ НОМЕР ЗВОНИЛ МЕНЕДЖЕР
-                        $model->caller_id = $event['cid_num'];
-                    }else{
-                        if($event['exten']=='29934'){$model->caller_id = '78007756046';}if($event['exten']=='167465'){$model->caller_id = '74952409192';}
-                    }
-                    //определяем ОФИС исходящего звонка по первой цифре из КОДА менеджера
-                    $model->office_call_id = mb_substr($event['cid_num'],0,1);
-                }
-            }
-
-            //определим - Номер клиента (Caller ID)
-            if(empty($model->caller_id) && !empty($event['cid_num']) && strlen($event['cid_num'])>8){
-                //$model->caller_id = str_replace('+','',$event['cid_num']);
-            }else{
-                //if($event['cid_num']=='29934'){$model->caller_id = '78007756046';}if($event['cid_num']=='167465'){$model->caller_id = '74952409192';}
-            }
-
-            //ищем номер на который позвонил клиент в списке событий+проверим его наличие в БД на совпадение
-            //поле в события "exten" - хранит DID номера на который позвонил клент
-            if(!empty($event['exten']) && empty($model->did)){
-                //делаем поиск DID в списке номеров подвязанных
-                $find_did = PhoneRegions::findPhoneByNumber($event['exten']);
-                //'Виртуальный номер на который позвонил клиент (DID)',
-                if(!empty($find_did)){
-                    $model->did = $event['exten'];//нашли соответсвие по ДИД
-                    $model->phone_region_id = $find_did;
-                }
-            }
-            //Время конца разговора
-            if($event['eventtype']=='LINKEDID_END'){
-                $model->time_end_call = self::getTimeFromDateTime($event['eventtime']);
-            }
-
-            //'waiting_time' =>'время от соединения с сервером до взятия трубки менеджером в секундах',
-            if($event['eventtype']=='CHAN_START' && empty($time_connect_server)){//$time_connect_server
-                $time_connect_server = $event['eventtime'];
-            }
-
-            //подсчитаем продолжительность звонка
-            if(!empty($time_disconnect) && !empty($time_connect_server)){
-                $model->duration_call = intval(strtotime($time_disconnect)-strtotime($time_connect_server));
-            }
-
-
-            if($event['eventtype']=='ANSWER'){
-
-                $answered_call = true;//ответил кто-то на звонок
-                if(!$model->call_back){
-
-                    //если не указан номер телефона клиента, поищем по длине номера
-                    if(empty($model->caller_id) && strlen($event['cid_num'])>7){
-                        $model->caller_id = str_replace('+','',$event['cid_num']);
-                    }
-
-                    //определим менеджера по звонку
-                    if(!empty($event['cid_num']) && strlen($event['cid_num'])<6 ){//1403882248.44748   && empty($model->manager_call_id)
-
-                        $find_manager = CallPhone::getManagerByCode($event['cid_num']);
-
-                        if(!empty($find_manager)){
-
-                            $model->manager_call_id  = $find_manager;
-
-                            if(empty($time_last_answer)){$time_last_answer = $event['eventtime'];}
-                        }
-                    }
-                }else{
-                    if(preg_match('/(.*?)_(.*?):(.*?)_(.*?)/',$event['cid_name']) && strlen($event['cid_num'])>8){
-                        $model->caller_id = str_replace('+','',$event['cid_num']);
-                    }else{
-                        if($event['exten']=='29934'){$model->caller_id = '78007756046';}if($event['exten']=='167465'){$model->caller_id = '74952409192';}
-                    }
-                }
-            }
-        }
-
-        //если номер телефона не определили из списка событий, то пройдёмся про списку событий ещё раз+ берём первый самый длшинный номер из всех
-        if(empty($model->caller_id)){
-            foreach($events as $index=>$event_new){
-                if(preg_match('/[0-9]{6,11}/',$event_new['cid_num'])){ $model->caller_id = $event_new['cid_num']; break;}
-                if(preg_match('/[0-9]{6,11}/',$event_new['exten'])){ $model->caller_id = $event_new['exten']; break;}
-            }
-        }
-
-        //если нашли менеджера по звонку, значит звонок был - отвечен, если НЕ нашли, значит не отвечен(ТОЛЬКО для ИСХОДЯЩЕГО звонка)
-        if($model->call_diraction == Report::INCOMING_CALL){
-            //для входящего звонка проверим по событию ANSWER
-            if($answered_call && !empty($model->manager_call_id)){
-                $model->status_call =  Report::CALL_ANSWERED;
-            }else{
-                $model->status_call =  Report::CALL_NO_ANSWER;
-            }
+        if(strlen($phone)>7){
+            $phone = str_replace(array('(',')','+'), '', $phone);
+            $result = substr_replace($phone, '7', 0, 1);
         }else{
-            if(!$answered_call){
-                $model->status_call =  Report::CALL_NO_ANSWER;
-            }else{
-                $model->status_call =  Report::CALL_ANSWERED;
-            }
+            $result = $phone;
         }
-
-
-        $model->chain_passed_redirects = '';
-        if(!empty($redirect_list)){
-            //убираем дубли при формировании списка менеджеров переадресации
-            //$redirect_list = array_unique($redirect_list);
-
-            //ищем соответствия кодам - менеджерам, что к ним подвязаны, чтобы получить"сева-катя-джамал"
-            $managers = Manager::findByCodeList($redirect_list);//получаем массив соответствий менеджеров по коду
-
-            if(!empty($managers)){
-
-                $managers_list = $this->arrayToString($managers, 'fio');
-
-                //$managers_list = implode('-',CHtml::listData($managers, 'fio', 'fio'));
-                /*'chain_passed_redirects' => 'Цепочка пройденных переадресаций в формате имен менеджеров "сева-катя-джамал" и пр',*/
-                $model->chain_passed_redirects = $managers_list;
-            }
-
-        }
-
-        //логика проставления полей для ИСХОДЯЩЕГО ЗВОНКА
-        if($model->call_diraction == Report::INCOMING_CALL){//входящий звонок
-
-        }
-
-        //'count_redirect' => 'сколько раз звонок был переадресован между менеджерами, прежде чем трубка была поднята',
-        $model->count_redirect = sizeof($redirect_list);
-
-        //проверим статус звонка, если на него ответили - считаем дельтту если не ответили - нет смысла
-        if($model->status_call==Report::CALL_ANSWERED){
-            //если нашли значения старта звонка и последнего поднятия трубки менеджером, считаем дельту
-            if(!empty($time_connect_server) && !empty($time_last_answer)){
-                $model->waiting_time = intval(strtotime($time_last_answer)-strtotime($time_connect_server));
-            }else{
-                $model->waiting_time = 0;
-            }
-        }else{
-            $model->waiting_time = 0;
-        }
-
-        return $model;
+        return $result;
     }
 
     /*
